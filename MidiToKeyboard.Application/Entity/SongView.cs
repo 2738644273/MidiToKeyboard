@@ -13,11 +13,11 @@ namespace MidiToKeyboard.Application.Entity
         public SongView(string filePath)
         {
             Song = new Song(filePath);
-            SongName = Path.GetFileName(filePath);
-            Guid = new Guid();
+            FileName = Path.GetFileName(filePath);
+            FilePath = filePath;
         }
         public Song Song { get; set; }
-        public string SongName { get; set; }
-        public Guid Guid { get; }
+        public string FileName { get; set; }
+        public string FilePath { get; }
     }
 }

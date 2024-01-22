@@ -5,19 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MidiToKeyboard.Application"
         mc:Ignorable="d"
-         
         Title="Midi" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <ListBox   ItemsSource="{Binding }"></ListBox>
+        <ListBox  SelectionChanged="ListBox_Selected"  ItemsSource="{Binding SongList}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding FileName}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <StackPanel Grid.Column="1">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="midi文件："></TextBlock>
-                <TextBox Name="FilePathTextBox" TextChanged="FilePathTextBox_TextChanged" Text="" Width="300"></TextBox>
-            </StackPanel>
+             
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="变调："></TextBlock>
                 <TextBox Name="ModifiedToneTextBox" Text="0" Width="30"></TextBox>
@@ -26,6 +28,7 @@
                 <TextBlock Text="速度："></TextBlock>
                 <TextBox Name="SpeedTextBox" Text="1" Width="30"></TextBox>
             </StackPanel>
+            <Button Click="AddFileButton_Click">添加文件</Button>
             <Button Click="ButtonBase_OnClick">播放</Button>
             <Button Click="ButtonBase2_OnClick">暂停</Button>
         </StackPanel>

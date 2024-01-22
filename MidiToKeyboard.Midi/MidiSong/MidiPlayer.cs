@@ -21,15 +21,16 @@ namespace MidiToKeyboard.Midi.MidiSong
         private IPressKey PressKey { get; }
         public int ModifiedTone { get; set; } = 0;
         public double Speed { get; set; } = 1d;
+        private OutputDevice OutputDevice { get;}
         public MidiPlayer(Song song, IPressKey pressKey, bool outputAudio)
         {
             Song = song;
             Playback = song.GetPlay();
             if (outputAudio)
             {
-                var outputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+                OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
 
-                Playback.OutputDevice = outputDevice;
+                Playback.OutputDevice = OutputDevice;
             }
             PressKey = pressKey;
             Playback.NoteCallback = NoteHandler;
@@ -45,7 +46,7 @@ namespace MidiToKeyboard.Midi.MidiSong
     
             if (noteKeyboard is object)
             {
-                PressKey.KeyPress(noteKeyboard.Key, (int)0);
+               // PressKey.KeyPress(noteKeyboard.Key, (int)0);
             }
             return newNotePlayBackData;
 
@@ -63,6 +64,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         }
         public void Dispose()
         {
+            OutputDevice?.Dispose();
             Playback?.Dispose();
         }
     }

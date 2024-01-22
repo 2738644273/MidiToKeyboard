@@ -11,13 +11,13 @@ namespace MidiToKeyboard.Application.ViewModel
 {
     public class MainWindowViewModel : BindableBase
     {
-        private ObservableCollection<SongView> _SongViews = new();
-        public ObservableCollection<SongView> SongViews
+        private ObservableCollection<SongView> _SongList = new();
+        public ObservableCollection<SongView> SongList
         {
-            get =>_SongViews;
+            get => _SongList;
             set
             {
-                SetProperty(ref _SongViews, value); 
+                SetProperty(ref _SongList, value); 
             }
         }
       
