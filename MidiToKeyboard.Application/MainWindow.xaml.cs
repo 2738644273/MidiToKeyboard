@@ -22,6 +22,9 @@ using Wpf.Ui.Controls;
 using MidiToKeyboard.Keyborad.HotkeyCapture;
 using Vanara.PInvoke;
 using Wpf.Ui.Interop.WinDef;
+using System.Diagnostics;
+using System.Linq;
+using static Vanara.PInvoke.Gdi32;
 
 namespace MidiToKeyboard.Application
 {
@@ -47,12 +50,13 @@ namespace MidiToKeyboard.Application
 
             #region 热键注册
 
-            
+            Hotkey hotkey12 = new(HotKey.FromString("Ctrl + F12").ToString());
             Hotkey hotkey11 = new (HotKey.FromString("Ctrl + F11").ToString());
             Hotkey hotkey10 = new (HotKey.FromString("Ctrl + F10").ToString());
 
             KeyBindInfo = new HotkeyHook();
             KeyBindInfo.KeyPressed += KeyBindInfo_KeyPressed;
+            KeyBindInfo.RegisterHotKey(hotkey10.ModifierKey, hotkey12.Key);
             KeyBindInfo.RegisterHotKey(hotkey10.ModifierKey, hotkey10.Key);
             KeyBindInfo.RegisterHotKey(hotkey11.ModifierKey, hotkey11.Key);
 
@@ -154,16 +158,43 @@ namespace MidiToKeyboard.Application
 
         private MidiPlayer Start(SongView songView= null)
         {
+            logInfo.Text = "";
+            logInfo.Text += $"切歌:{songView.FileName}-------------------------------";
+          
             midiPlayer?.Dispose();
             OutputDevice?.Dispose();
+            GC.Collect();
+            GC.SuppressFinalize(this);
             songView.Song.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
             songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
             OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
             isStart = true;
-            var midi = new MidiPlayer(songView.Song, null, OutputDevice);
+            var midi = new MidiPlayer(songView.Song, null);
+            midi.OnPlayKey += Midi_OnPlayKey;
              midiPlayer = midi;
              midiPlayer.Play();
             return midiPlayer;
+        }
+
+        private async void Midi_OnPlayKey(NoteKeyboard obj)
+        {
+            try
+            {
+                string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteNumber}) 播放音符: {obj.NewNote}({obj.NewNote.NoteNumber}) 按下: {obj.Key},时间:{obj.Millisecond}";
+                Debug.WriteLine(info);
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    
+                    logInfo.Text += info;
+                    logInfo.ScrollToEnd();
+                });
+                mPressKey.KeyPress(obj.Key, (int)obj.Millisecond);
+            }
+            catch (Exception)
+            {
+
+                 
+            }
         }
 
         private void Stop()
@@ -202,16 +233,21 @@ namespace MidiToKeyboard.Application
         private void AddFileButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
             openFileDialog.Filter = "MIDI 文件 (*.mid;*.midi)|*.mid;*.midi|所有文件 (*.*)|*.*";
 
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                if (MainWindowViewModel.SongList.Any(p => p.FileName == openFileDialog.FileName))
+                foreach (var file in openFileDialog.FileNames)
                 {
-                    System.Windows.MessageBox.Show("文件已存在播放列表");
+                    if (MainWindowViewModel.SongList.Any(p => p.FileName == file))
+                    {
+                        continue;
+                    }
+                    var songView = new SongView(file);
+                    MainWindowViewModel.SongList.Add(songView);
                 }
-                var songView = new SongView(openFileDialog.FileName);
-                MainWindowViewModel.SongList.Add(songView);
+              
             }
         }
     }

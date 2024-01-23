@@ -173,14 +173,14 @@ namespace MidiToKeyboard.Midi.MidiSong
                 //处理按下耗时
                 MetricTimeSpan metricTime = TimeConverter.ConvertTo<MetricTimeSpan>(length, TempoMap);
 
-                Debug.WriteLine($"原始: {originalNote}({original_pitch}) 播放音符: {pitchNote}({pitch}) 按下: {key_press},时间:{length}");
-                return new NoteKeyboard(pitchNote,key_press, length);
+             
+                return new NoteKeyboard(pitchNote,originalNote,key_press, length);
             }
            
             catch (Exception)
             {
 
-                return null;
+                //return null;
             }
 
             return null;

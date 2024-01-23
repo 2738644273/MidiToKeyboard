@@ -17,9 +17,9 @@ namespace MidiToKeyboard.Midi.MidiSong
     /// </summary>
     public class MidiPlayer
     {
+        public event Action<NoteKeyboard> OnPlayKey;
         public Playback Playback { get; }
         public Song Song { get; }
-        private IPressKey PressKey { get; }
 
         private OutputDevice OutputDevice { get;}
         /// <summary>
@@ -28,7 +28,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <param name="song">要播放的歌曲</param>
         /// <param name="pressKey">按键键盘接口</param>
         /// <param name="outputAudio">输出到音频</param>
-        public MidiPlayer(Song song, IPressKey pressKey = null, OutputDevice outputAudio = null)
+        public MidiPlayer(Song song, OutputDevice outputAudio = null)
         {
             Song = song;
             Playback = song.GetPlay();
@@ -37,7 +37,7 @@ namespace MidiToKeyboard.Midi.MidiSong
                 OutputDevice = outputAudio;
                 Playback.OutputDevice = OutputDevice;
             }
-            PressKey = pressKey;
+          
             Playback.NoteCallback = NoteHandler;
         }
  
@@ -59,9 +59,10 @@ namespace MidiToKeyboard.Midi.MidiSong
             //转换成按键
             NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(newNotePlayBackData, time, length);
             
-            if (noteKeyboard is object&& PressKey is object)
+            if (noteKeyboard is object)
             {
-                PressKey.KeyPress(noteKeyboard.Key, (int)0);
+                OnPlayKey?.Invoke(noteKeyboard);
+                //PressKey.KeyPress(noteKeyboard.Key, (int)0);
             }
             return newNotePlayBackData;
         }
