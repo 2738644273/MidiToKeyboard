@@ -22,19 +22,19 @@ namespace MidiToKeyboard.Midi.MidiSong
         public int ModifiedTone { get; set; } = 0;
         public double Speed { get; set; } = 1d;
         private OutputDevice OutputDevice { get;}
-        public MidiPlayer(Song song, IPressKey pressKey, OutputDevice outputAudio)
+        public MidiPlayer(Song song, IPressKey pressKey, bool outputAudio)
         {
             Song = song;
             Playback = song.GetPlay();
-            if (outputAudio is not null)
+            if (outputAudio)
             {
-                OutputDevice = outputAudio;
-                Playback.OutputDevice =OutputDevice;
+                OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+
+                Playback.OutputDevice = OutputDevice;
             }
             PressKey = pressKey;
             Playback.NoteCallback = NoteHandler;
         }
-
         private NotePlaybackData NoteHandler(NotePlaybackData data, long time, long length, TimeSpan playbackTime)
         {
             var originalNote = (int)data.NoteNumber;
