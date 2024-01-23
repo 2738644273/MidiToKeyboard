@@ -24,6 +24,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// Midi文件
         /// </summary>
         public MidiFile MidiFile { get; }
+        public List<TrackChunk>  TrackChunks { get; }
         /// <summary>
         /// 节奏表
         /// </summary>
@@ -40,7 +41,19 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// 偏移值
         /// </summary>
         public int Shifting { get; }
+        /// <summary>
+        /// 变调演奏
+        /// </summary>
+        public int ModifiedTone { get; set; } = 0;
+        /// <summary>
+        /// 演奏速度
+        /// </summary>
+        public double Speed { get; set; } = 1d;
 
+        /// <summary>
+        /// 播放进度
+        /// </summary>
+        public MetricTimeSpan PlaybackProgressTime { get; set; } = new MetricTimeSpan(0);
         /// <summary>
         /// 获取Midi播放器
         /// </summary>
@@ -55,7 +68,7 @@ namespace MidiToKeyboard.Midi.MidiSong
             MidiFile = MidiFile.Read(midiPath);
             TempoMap = MidiFile.GetTempoMap();
             TimedEvents = MidiFile.GetTimedEvents().ToList();
-            MidiFile.GetNotes();
+            TrackChunks = MidiFile.GetTrackChunks().ToList();
             //获取最佳偏移值
             Shifting = ComputeBestShift();
 

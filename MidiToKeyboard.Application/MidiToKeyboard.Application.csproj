@@ -10,12 +10,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Kirara.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MidiToKeyboard.Keyborad\MidiToKeyboard.Keyborad.csproj" />
     <ProjectReference Include="..\MidiToKeyboard.Midi\MidiToKeyboard.Midi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Kirara.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

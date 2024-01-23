@@ -17,17 +17,26 @@ using MidiToKeyboard.Midi.MidiSong;
 using MidiToKeyboard.Midi.Util;
 using MidiToKeyboard.Application.ViewModel;
 using MidiToKeyboard.Application.Entity;
+using MidiToKeyboard.Keyborad.HotKey;
+using Wpf.Ui.Controls;
+using MidiToKeyboard.Keyborad.HotkeyCapture;
+using Vanara.PInvoke;
+using Wpf.Ui.Interop.WinDef;
 
 namespace MidiToKeyboard.Application
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : FluentWindow
     {
         private static MidiPlayer midiPlayer = null;
         private static IPressKey mPressKey = new PressKeyByWinRing0();
-        private MainWindowViewModel MainWindowViewModel { get;  }
+        private  static OutputDevice OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+        private static SongView currentSongView = null;
+        private static HotkeyHook KeyBindInfo = null;
+
+        private MainWindowViewModel MainWindowViewModel { get; }
         public MainWindow()
         {
             InitializeComponent();
@@ -35,24 +44,114 @@ namespace MidiToKeyboard.Application
             mPressKey.Initialize(EnumWindowsType.Win32);
             MainWindowViewModel = new MainWindowViewModel();
             DataContext = MainWindowViewModel;
+
+            #region 热键注册
+
+            
+            Hotkey hotkey11 = new (HotKey.FromString("Ctrl + F11").ToString());
+            Hotkey hotkey10 = new (HotKey.FromString("Ctrl + F10").ToString());
+
+            KeyBindInfo = new HotkeyHook();
+            KeyBindInfo.KeyPressed += KeyBindInfo_KeyPressed;
+            KeyBindInfo.RegisterHotKey(hotkey10.ModifierKey, hotkey10.Key);
+            KeyBindInfo.RegisterHotKey(hotkey11.ModifierKey, hotkey11.Key);
+
+            #endregion
         }
- 
+
+        private void KeyBindInfo_KeyPressed(object? sender, KeyPressedEventArgs e)
+        {
+            SongView songView = null;
+            //暂停
+            if (e.Key == EnumKey.F11&&e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
+            {
+                Stop();
+                return;
+            }
+            //上一首
+            if (e.Key == EnumKey.F10 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
+            {
+                songView = GetSong(-1);
+
+            }
+
+            //下一首
+            if (e.Key == EnumKey.F10 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
+            {
+                songView = GetSong(1);
+
+            }
+
+            if (songView is object)
+            {
+                midiPlayer = Start(songView);
+            }
+            
+
+        }
+
+        private SongView GetSong(int ii)
+        {
+            var selectI = SongListBox.SelectedIndex;
+            var allCount = MainWindowViewModel.SongList.Count;
+            var nextValue = selectI + ii;
+            if (selectI == -1)
+            {
+                if (allCount>0)
+                {
+                    nextValue = 0;
+                }
+            };
+          
+            if (nextValue >= 0&& nextValue < allCount)
+            {
+                SongListBox.SelectedIndex = nextValue;
+                var song =  SongListBox.SelectedItem as SongView;
+                if (song != null)
+                {
+                    return song;
+                }
+            }
+
+            return null;
+        }
+
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            if (midiPlayer is null) {
+            if (midiPlayer is null)
+            {
                 System.Windows.MessageBox.Show("没有选择任何曲目");
+                return;
             }
-            midiPlayer.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
-            midiPlayer.Speed = Convert.ToDouble(SpeedTextBox.Text);
+
+            currentSongView.Song.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
+            currentSongView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
             midiPlayer.Play();
         }
 
         private void ButtonBase2_OnClick(object sender, RoutedEventArgs e)
         {
+
+            Stop();
+        }
+
+        private MidiPlayer Start(SongView songView)
+        {
+            return new MidiPlayer(songView.Song, null, OutputDevice);
+            
+        }
+
+        private void Stop()
+        {
+            if (currentSongView is null)
+            {
+                return;
+            }
+            var longTime = currentSongView.Song.PlaybackProgressTime.Milliseconds;
+            currentSongView.PlayTime = longTime;
             midiPlayer.Stop();
         }
 
-       
         /// <summary>
         /// 选择后
         /// </summary>
@@ -64,9 +163,8 @@ namespace MidiToKeyboard.Application
             {
                 midiPlayer?.Dispose();
                 var listbox = e.Source as System.Windows.Controls.ListBox;
-                var data = listbox.SelectedItem as SongView;
-                
-                midiPlayer = new MidiPlayer(data.Song, mPressKey, true);
+                currentSongView = listbox.SelectedItem as SongView;
+                midiPlayer = Start(currentSongView);
 
             }
             catch (Exception ex)
@@ -79,7 +177,7 @@ namespace MidiToKeyboard.Application
         private void AddFileButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Mid文件 (*.mid)|*.mid|Midi文件 (*.midi)|*.midi";
+            openFileDialog.Filter = "MIDI 文件 (*.mid;*.midi)|*.mid;*.midi|所有文件 (*.*)|*.*";
 
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -87,11 +185,9 @@ namespace MidiToKeyboard.Application
                 {
                     System.Windows.MessageBox.Show("文件已存在播放列表");
                 }
-                var songView  =  new SongView(openFileDialog.FileName); 
+                var songView = new SongView(openFileDialog.FileName);
                 MainWindowViewModel.SongList.Add(songView);
             }
-
-  
         }
     }
 }

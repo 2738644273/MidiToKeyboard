@@ -1,36 +1,56 @@
-﻿<Window x:Class="MidiToKeyboard.Application.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MidiToKeyboard.Application"
-        mc:Ignorable="d"
-        Title="Midi" Height="450" Width="800">
+﻿<ui:FluentWindow x:Class="MidiToKeyboard.Application.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:MidiToKeyboard.Application"
+             mc:Ignorable="d"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:viewModel="clr-namespace:MidiToKeyboard.Application.ViewModel"
+             d:Background="#D2D2D2"
+             ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+             ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+             d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}"
+             ExtendsContentIntoTitleBar="True"
+             Width="900"
+             Height="600">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        <ListBox  SelectionChanged="ListBox_Selected"  ItemsSource="{Binding SongList}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding FileName}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <StackPanel Grid.Column="1">
-             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="变调："></TextBlock>
-                <TextBox Name="ModifiedToneTextBox" Text="0" Width="30"></TextBox>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ui:TitleBar Title="{Binding Title, Mode=OneWay}" Grid.Row="0">
+                <ui:TitleBar.Icon>
+                    <ui:ImageIcon Source="pack://application:,,,/Assets/Kirara.png" />
+                </ui:TitleBar.Icon>
+            </ui:TitleBar>
+        <Grid  Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ListBox  SelectionChanged="ListBox_Selected"  Name="SongListBox" ItemsSource="{Binding SongList}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding FileName}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="变调："></TextBlock>
+                    <TextBox Name="ModifiedToneTextBox" Text="0" Width="300"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10">
+                    <TextBlock VerticalAlignment="Center"  Text="速度："></TextBlock>
+                    <TextBox Name="SpeedTextBox" Text="1" Width="300"></TextBox>
+                </StackPanel>
+               <WrapPanel HorizontalAlignment="Center">
+                   <Button Click="AddFileButton_Click" Margin="10,0,10,0">添加文件</Button>
+                    <Button Click="ButtonBase_OnClick" Margin="10,0,10,0">播放</Button>
+                    <Button Click="ButtonBase2_OnClick" Margin="10,0,10,0">暂停</Button>
+                </WrapPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="速度："></TextBlock>
-                <TextBox Name="SpeedTextBox" Text="1" Width="30"></TextBox>
-            </StackPanel>
-            <Button Click="AddFileButton_Click">添加文件</Button>
-            <Button Click="ButtonBase_OnClick">播放</Button>
-            <Button Click="ButtonBase2_OnClick">暂停</Button>
-        </StackPanel>
-    </Grid>
-</Window>
+        </Grid>
+        </Grid>
+</ui:FluentWindow>
