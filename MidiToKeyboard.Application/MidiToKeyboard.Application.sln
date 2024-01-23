@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidiToKeyboard.Application", "MidiToKeyboard.Application.csproj", "{8ED3EAF5-DCB7-43C1-B0FE-41E878C7E0B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidiToKeyboard.Application.Test", "MidiToKeyboard.Application.Test.csproj", "{8ED3EAF5-DCB7-43C1-B0FE-41E878C7E0B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidiToKeyboard.Midi", "..\MidiToKeyboard.Midi\MidiToKeyboard.Midi.csproj", "{6F396E33-6895-4C6C-8F3D-5BB2D9C5987E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidiToKeyboard.Midi", "..\MidiToKeyboard.Midi\MidiToKeyboard.Midi.csproj", "{6F396E33-6895-4C6C-8F3D-5BB2D9C5987E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidiToKeyboard.Keyborad", "..\MidiToKeyboard.Keyborad\MidiToKeyboard.Keyborad.csproj", "{5D183FBD-0A64-43B0-B7B4-268E9FBDD1BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidiToKeyboard.Keyborad", "..\MidiToKeyboard.Keyborad\MidiToKeyboard.Keyborad.csproj", "{5D183FBD-0A64-43B0-B7B4-268E9FBDD1BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

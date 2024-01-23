@@ -47,8 +47,9 @@
                 </StackPanel>
                <WrapPanel HorizontalAlignment="Center">
                    <Button Click="AddFileButton_Click" Margin="10,0,10,0">添加文件</Button>
-                    <Button Click="ButtonBase_OnClick" Margin="10,0,10,0">播放</Button>
-                    <Button Click="ButtonBase2_OnClick" Margin="10,0,10,0">暂停</Button>
+                    <Button Click="ButtonBase_OnClick" Margin="10,0,10,0">(Ctrl+F11)播放</Button>
+                    <Button Click="ButtonBase2_OnClick" Margin="10,0,10,0">(Ctrl+F11)暂停</Button>
+                   <TextBlock>上一首(Ctrl + F10)  下一首(Ctrl + F12)</TextBlock>
                 </WrapPanel>
             </StackPanel>
         </Grid>

@@ -32,7 +32,7 @@ namespace MidiToKeyboard.Application
     {
         private static MidiPlayer midiPlayer = null;
         private static IPressKey mPressKey = new PressKeyByWinRing0();
-        private  static OutputDevice OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+        private  static OutputDevice OutputDevice = null;
         private static SongView currentSongView = null;
         private static HotkeyHook KeyBindInfo = null;
         private static bool isStart = false;
@@ -62,11 +62,13 @@ namespace MidiToKeyboard.Application
         private void KeyBindInfo_KeyPressed(object? sender, KeyPressedEventArgs e)
         {
             SongView songView = null;
+   
+        
             //暂停
             if (e.Key == EnumKey.F11&&e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
             
-                if (currentSongView is null && songView is null)
+                if (currentSongView is null)
                 {
                     return;
                 }
@@ -77,13 +79,15 @@ namespace MidiToKeyboard.Application
                 }
                 else
                 {
-                    Start();
+           
+                    midiPlayer =  Start(currentSongView);
                 }
                 return;
             }
             //上一首
             if (e.Key == EnumKey.F10 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
+           
                 songView = GetSong(-1);
 
             }
@@ -91,12 +95,14 @@ namespace MidiToKeyboard.Application
             //下一首
             if (e.Key == EnumKey.F12 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
+             
                 songView = GetSong(1);
 
             }
 
             if (songView is object)
             {
+               
                 midiPlayer = Start(songView);
             }
             
@@ -131,15 +137,13 @@ namespace MidiToKeyboard.Application
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            if (midiPlayer is null)
+            if (currentSongView is null)
             {
                 System.Windows.MessageBox.Show("没有选择任何曲目");
                 return;
             }
 
-            currentSongView.Song.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
-            currentSongView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
-            midiPlayer.Play();
+          midiPlayer =  Start(currentSongView);
         }
 
         private void ButtonBase2_OnClick(object sender, RoutedEventArgs e)
@@ -150,9 +154,16 @@ namespace MidiToKeyboard.Application
 
         private MidiPlayer Start(SongView songView= null)
         {
-        
-            return new MidiPlayer(songView.Song, null, OutputDevice);
-            
+            midiPlayer?.Dispose();
+            OutputDevice?.Dispose();
+            songView.Song.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
+            songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
+            OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+            isStart = true;
+            var midi = new MidiPlayer(songView.Song, null, OutputDevice);
+             midiPlayer = midi;
+             midiPlayer.Play();
+            return midiPlayer;
         }
 
         private void Stop()
@@ -174,7 +185,8 @@ namespace MidiToKeyboard.Application
         {
             try
             {
-                midiPlayer?.Dispose();
+           
+
                 var listbox = e.Source as System.Windows.Controls.ListBox;
                 currentSongView = listbox.SelectedItem as SongView;
                 midiPlayer = Start(currentSongView);

@@ -11,7 +11,7 @@ namespace MidiToKeyboard.Application.ViewModel
 {
     public class MainWindowViewModel : BindableBase
     {
-        public string Title = "六指琴魔";
+        public string Title => "六指琴魔";
         private ObservableCollection<SongView> _SongList = new();
         public ObservableCollection<SongView> SongList
         {
