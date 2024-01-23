@@ -17,6 +17,7 @@ using MidiToKeyboard.Midi.MidiSong;
 using MidiToKeyboard.Midi.Util;
 using MidiToKeyboard.Application.ViewModel;
 using MidiToKeyboard.Application.Entity;
+using Wpf.Ui.Controls;
 
 namespace MidiToKeyboard.Application
 {
@@ -29,7 +30,7 @@ namespace MidiToKeyboard.Application
         private static IPressKey mPressKey = new PressKeyByWinRing0();
         private MainWindowViewModel MainWindowViewModel { get;  }
         public MainWindow()
-        {
+        { 
             InitializeComponent();
             //初始化按键
             mPressKey.Initialize(EnumWindowsType.Win32);
@@ -65,9 +66,7 @@ namespace MidiToKeyboard.Application
                 midiPlayer?.Dispose();
                 var listbox = e.Source as System.Windows.Controls.ListBox;
                 var data = listbox.SelectedItem as SongView;
-                
-                midiPlayer = new MidiPlayer(data.Song, mPressKey, true);
-
+                midiPlayer = new MidiPlayer(data.Song, mPressKey, OutputDevice.GetByName("Microsoft GS Wavetable Synth"));
             }
             catch (Exception ex)
             {

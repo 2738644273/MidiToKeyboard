@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MidiToKeyboard.Application"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="Midi" Height="450" Width="800">
     <Grid>
@@ -28,9 +29,9 @@
                 <TextBlock Text="速度："></TextBlock>
                 <TextBox Name="SpeedTextBox" Text="1" Width="30"></TextBox>
             </StackPanel>
-            <Button Click="AddFileButton_Click">添加文件</Button>
-            <Button Click="ButtonBase_OnClick">播放</Button>
-            <Button Click="ButtonBase2_OnClick">暂停</Button>
+            <ui:Button Click="AddFileButton_Click">添加文件</ui:Button>
+            <ui:Button Click="ButtonBase_OnClick">播放</ui:Button>
+            <ui:Button Click="ButtonBase2_OnClick">暂停</ui:Button>
         </StackPanel>
     </Grid>
 </Window>
