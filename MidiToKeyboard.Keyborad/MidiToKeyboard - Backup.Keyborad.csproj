@@ -11,12 +11,8 @@
 
     <ItemGroup>
     <Folder Include="Driver\" />
+    <Folder Include="Capture\" />
   </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Vanara.PInvoke.Kernel32" Version="3.4.17" />
-      <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.17" />
-    </ItemGroup>
 
   <ItemGroup>
     <None Update="Driver\WinIo32.dll">
