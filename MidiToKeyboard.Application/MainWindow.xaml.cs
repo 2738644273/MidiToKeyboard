@@ -35,7 +35,7 @@ namespace MidiToKeyboard.Application
         private  static OutputDevice OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
         private static SongView currentSongView = null;
         private static HotkeyHook KeyBindInfo = null;
-
+        private static bool isStart = false;
         private MainWindowViewModel MainWindowViewModel { get; }
         public MainWindow()
         {
@@ -65,7 +65,20 @@ namespace MidiToKeyboard.Application
             //暂停
             if (e.Key == EnumKey.F11&&e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
-                Stop();
+            
+                if (currentSongView is null && songView is null)
+                {
+                    return;
+                }
+                
+                if (isStart)
+                {
+                    Stop();
+                }
+                else
+                {
+                    Start();
+                }
                 return;
             }
             //上一首
@@ -76,7 +89,7 @@ namespace MidiToKeyboard.Application
             }
 
             //下一首
-            if (e.Key == EnumKey.F10 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
+            if (e.Key == EnumKey.F12 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
                 songView = GetSong(1);
 
@@ -135,8 +148,9 @@ namespace MidiToKeyboard.Application
             Stop();
         }
 
-        private MidiPlayer Start(SongView songView)
+        private MidiPlayer Start(SongView songView= null)
         {
+        
             return new MidiPlayer(songView.Song, null, OutputDevice);
             
         }
@@ -147,8 +161,7 @@ namespace MidiToKeyboard.Application
             {
                 return;
             }
-            var longTime = currentSongView.Song.PlaybackProgressTime.Milliseconds;
-            currentSongView.PlayTime = longTime;
+            isStart = false;
             midiPlayer.Stop();
         }
 

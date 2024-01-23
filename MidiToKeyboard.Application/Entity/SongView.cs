@@ -20,9 +20,6 @@ namespace MidiToKeyboard.Application.Entity
         public string FileName { get; set; }
         public string FilePath { get; }
 
-        /// <summary>
-        /// 播放时间，使用公制毫秒时间
-        /// </summary>
-        public long PlayTime { get; set; } = 0;
+     
     }
 }
