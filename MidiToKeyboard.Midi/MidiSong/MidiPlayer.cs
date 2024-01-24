@@ -63,10 +63,11 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <param name="e"></param>
         void Playback_NotesPlaybackStarted(object? sender, NotesEventArgs e)
         {
+   
             foreach (var note in e.Notes)
             {
                 //转换成按键
-                NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note);
+                NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note,Playback.TempoMap);
                 if (noteKeyboard is not null && OnPlay is not null)
                 {
                     OnPlay(noteKeyboard);

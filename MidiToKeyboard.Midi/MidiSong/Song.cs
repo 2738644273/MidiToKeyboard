@@ -142,7 +142,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <param name="length"></param>
         /// <param name="millisecond"></param>
         /// <returns></returns>
-        public NoteKeyboard? GetKeyboardKey(Note noteKey)
+        public NoteKeyboard? GetKeyboardKey(Note noteKey,TempoMap tempoMap)
         {
             int shifting = Shifting;
             int octave_interval = Config.OctaveInterval;
@@ -170,8 +170,8 @@ namespace MidiToKeyboard.Midi.MidiSong
                 }
 
                 char key_press = char.ToUpper(keytable[pitch - c3_pitch]);
-              
-                return new NoteKeyboard(pitchNote,originalNote,key_press, 0);
+                var time = noteKey.LengthAs<MetricTimeSpan>(tempoMap);
+                return new NoteKeyboard(pitchNote,originalNote,key_press, time.Milliseconds);
             }
            
             catch (Exception)

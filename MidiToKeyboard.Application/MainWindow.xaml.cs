@@ -169,7 +169,7 @@ namespace MidiToKeyboard.Application
             songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
             OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
             isStart = true;
-            var midi = new MidiPlayer(songView.Song, OutputDevice);
+            var midi = new MidiPlayer(songView.Song, null);
             midi.OnPlay += Midi_OnPlayKey;
              midiPlayer = midi;
              midiPlayer.Play();
@@ -189,7 +189,7 @@ namespace MidiToKeyboard.Application
                //logInfo.Text += info;
                //logInfo.ScrollToEnd();
         
-                //mPressKey.KeyPress(obj.Key, (int)obj.Millisecond);
+                mPressKey.KeyPress(obj.Key, (int)obj.Millisecond).GetAwaiter().GetResult();
             }
             catch (Exception exception)
             {
