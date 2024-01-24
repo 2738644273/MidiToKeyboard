@@ -160,7 +160,7 @@ namespace MidiToKeyboard.Application
             songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
             OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
             isStart = true;
-            var midi = new MidiPlayer(songView.Song, null, OutputDevice);
+            var midi = new MidiPlayer(songView.Song, pressKey: mPressKey, OutputDevice);
              midiPlayer = midi;
              midiPlayer.Play();
             return midiPlayer;
