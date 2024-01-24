@@ -169,28 +169,29 @@ namespace MidiToKeyboard.Application
             songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
             OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
             isStart = true;
-            var midi = new MidiPlayer(songView.Song, null);
-            midi.OnPlayKey += Midi_OnPlayKey;
+            var midi = new MidiPlayer(songView.Song, OutputDevice);
+            midi.OnPlay += Midi_OnPlayKey;
              midiPlayer = midi;
              midiPlayer.Play();
             return midiPlayer;
         }
 
-        private async void Midi_OnPlayKey(NoteKeyboard obj)
+        private void Midi_OnPlayKey(NoteKeyboard obj)
         {
             try
             {
                 string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteNumber}) 播放音符: {obj.NewNote}({obj.NewNote.NoteNumber}) 按下: {obj.Key},时间:{obj.Millisecond}";
-                Debug.WriteLine(info);
-                await Dispatcher.InvokeAsync(() =>
-                {
-                    
-                    logInfo.Text += info;
-                    logInfo.ScrollToEnd();
-                });
-                mPressKey.KeyPress(obj.Key, (int)obj.Millisecond);
+                Debug.WriteLine(info); 
+                //if (logInfo.Text.Length>400)
+                //{
+                //    logInfo.Text = "";
+                //}
+               //logInfo.Text += info;
+               //logInfo.ScrollToEnd();
+        
+                //mPressKey.KeyPress(obj.Key, (int)obj.Millisecond);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
 
                  

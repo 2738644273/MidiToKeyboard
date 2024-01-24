@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,11 +18,23 @@ namespace MidiToKeyboard.Midi.MidiSong
     /// </summary>
     public class MidiPlayer
     {
-        public event Action<NoteKeyboard> OnPlayKey;
+        /// <summary>
+        /// 演奏事件
+        /// </summary>
+        public event Action<NoteKeyboard> OnPlay;
         public Playback Playback { get; }
+        /// <summary>
+        /// Midi演奏对象
+        /// </summary>
         public Song Song { get; }
-
-        private OutputDevice OutputDevice { get;}
+        /// <summary>
+        /// 输出到音频
+        /// </summary>
+        private OutputDevice OutputDevice { get; }
+        /// <summary>
+        /// 需要演奏的通道
+        /// </summary>
+        public List<FourBitNumber> PlayingChannels { get; set; }
         /// <summary>
         /// 演奏器类
         /// </summary>
@@ -32,15 +45,36 @@ namespace MidiToKeyboard.Midi.MidiSong
         {
             Song = song;
             Playback = song.GetPlay();
-            if (outputAudio is not null)
+            if (outputAudio != null)
             {
                 OutputDevice = outputAudio;
                 Playback.OutputDevice = OutputDevice;
+
             }
-          
+
+            PlayingChannels = song.MidiFile.GetChannels().ToList();
+            Playback.NotesPlaybackStarted += Playback_NotesPlaybackStarted;
             Playback.NoteCallback = NoteHandler;
         }
- 
+        /// <summary>
+        /// 音符开始演奏时触发键盘转换
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void Playback_NotesPlaybackStarted(object? sender, NotesEventArgs e)
+        {
+            foreach (var note in e.Notes)
+            {
+                //转换成按键
+                NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note);
+                if (noteKeyboard is not null && OnPlay is not null)
+                {
+                    OnPlay(noteKeyboard);
+                }
+            }
+
+        }
+
         /// <summary>
         /// 音符处理器
         /// </summary>
@@ -51,27 +85,25 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <returns></returns>
         private NotePlaybackData NoteHandler(NotePlaybackData data, long time, long length, TimeSpan playbackTime)
         {
-            Song.PlaybackProgressTime = Playback.GetCurrentTime<MetricTimeSpan>();
-            var originalNote = (int)data.NoteNumber;
-            var modifiedToneKey = originalNote + Song.ModifiedTone;
-            //转换后音调
-            var newNotePlayBackData = new NotePlaybackData(new SevenBitNumber((byte)modifiedToneKey), data.Velocity, data.OffVelocity, data.Channel);
-            //转换成按键
-            NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(newNotePlayBackData, time, length);
-            
-            if (noteKeyboard is object)
+            //通道列表存在该音符就播放，否则跳过该音符
+            if (PlayingChannels.Contains(data.Channel))
             {
-                OnPlayKey?.Invoke(noteKeyboard);
-                //PressKey.KeyPress(noteKeyboard.Key, (int)0);
+                Song.PlaybackProgressTime = Playback.GetCurrentTime<MetricTimeSpan>();
+                var originalNote = (int)data.NoteNumber;
+                var modifiedToneKey = originalNote + Song.ModifiedTone;
+                //转换后音调
+                var newNotePlayBackData = new NotePlaybackData(new SevenBitNumber((byte)modifiedToneKey), data.Velocity, data.OffVelocity, data.Channel);
+                return newNotePlayBackData;
             }
-            return newNotePlayBackData;
+
+            return null;
         }
         /// <summary>
         /// 开始播放
         /// </summary>
         public void Play()
         {
- 
+
             //设置曲速
             Playback.Speed = Song.Speed;
             Playback.Start();

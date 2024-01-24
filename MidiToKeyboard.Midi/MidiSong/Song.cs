@@ -142,7 +142,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <param name="length"></param>
         /// <param name="millisecond"></param>
         /// <returns></returns>
-        public NoteKeyboard? GetKeyboardKey(NotePlaybackData noteKey, long time,long length)
+        public NoteKeyboard? GetKeyboardKey(Note noteKey)
         {
             int shifting = Shifting;
             int octave_interval = Config.OctaveInterval;
@@ -160,8 +160,8 @@ namespace MidiToKeyboard.Midi.MidiSong
                     pitch = pitch % octave_interval + c5_pitch;
 
                 //获取音符
-                var originalNote = new Note(new SevenBitNumber((byte)original_pitch), length, time);
-                var pitchNote = new Note(new SevenBitNumber((byte)pitch), length, time);
+                var originalNote = new Note(new SevenBitNumber((byte)original_pitch), noteKey.Length, noteKey.Time);
+                var pitchNote = new Note(new SevenBitNumber((byte)pitch), noteKey.Length, noteKey.Time);
 
                 if (pitch < c3_pitch || pitch > b5_pitch)
                 {
@@ -170,11 +170,8 @@ namespace MidiToKeyboard.Midi.MidiSong
                 }
 
                 char key_press = char.ToUpper(keytable[pitch - c3_pitch]);
-                //处理按下耗时
-                MetricTimeSpan metricTime = TimeConverter.ConvertTo<MetricTimeSpan>(length, TempoMap);
-
-             
-                return new NoteKeyboard(pitchNote,originalNote,key_press, length);
+              
+                return new NoteKeyboard(pitchNote,originalNote,key_press, 0);
             }
            
             catch (Exception)
