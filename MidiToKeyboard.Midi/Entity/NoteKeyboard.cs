@@ -17,14 +17,20 @@ namespace MidiToKeyboard.Midi.Entity
         /// 按下的毫秒数
         /// </summary>
         public long Millisecond { get;  }
+        /// <summary>
+        /// 转换后的音符
+        /// </summary>
         public Note NewNote { get;}
-
-        public NoteKeyboard(Note newNote,char key, long millisecond)
+        /// <summary>
+        /// 原始音符
+        /// </summary>
+        public Note OldNote { get;}
+        public NoteKeyboard(Note newNote, Note oldNote,char key, long millisecond)
         {
             Key = key;
             Millisecond = millisecond;
             NewNote = newNote;
-
+            OldNote = oldNote;
         }
     }
 }

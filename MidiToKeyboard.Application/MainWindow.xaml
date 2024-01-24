@@ -51,6 +51,11 @@
                     <Button Click="ButtonBase2_OnClick" Margin="10,0,10,0">(Ctrl+F11)暂停</Button>
                    <TextBlock>上一首(Ctrl + F10)  下一首(Ctrl + F12)</TextBlock>
                 </WrapPanel>
+                <StackPanel>
+                    <TextBlock >消息：</TextBlock>
+                    <ui:TextBox Margin="0,10,0,0" Name="logInfo"  Height="368"></ui:TextBox>
+                </StackPanel>
+            
             </StackPanel>
         </Grid>
         </Grid>
