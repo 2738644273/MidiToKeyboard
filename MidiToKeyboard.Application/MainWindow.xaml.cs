@@ -181,15 +181,15 @@ namespace MidiToKeyboard.Application
             try
             {
                 string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteNumber}) 播放音符: {obj.NewNote}({obj.NewNote.NoteNumber}) 按下: {obj.Key},时间:{obj.Millisecond}";
-                Debug.WriteLine(info); 
+                Debug.WriteLine(info);
                 //if (logInfo.Text.Length>400)
                 //{
                 //    logInfo.Text = "";
                 //}
-               //logInfo.Text += info;
-               //logInfo.ScrollToEnd();
-        
-                mPressKey.KeyPress(obj.Key, (int)obj.Millisecond).GetAwaiter().GetResult();
+                //logInfo.Text += info;
+                //logInfo.ScrollToEnd();
+                //mPressKey.KeyPress(obj.Key, (int)0);
+                mPressKey.KeyPress(obj.Key, (int)obj.Millisecond);
             }
             catch (Exception exception)
             {

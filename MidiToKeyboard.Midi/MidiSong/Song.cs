@@ -170,8 +170,9 @@ namespace MidiToKeyboard.Midi.MidiSong
                 }
 
                 char key_press = char.ToUpper(keytable[pitch - c3_pitch]);
-                var time = noteKey.LengthAs<MetricTimeSpan>(tempoMap);
-                return new NoteKeyboard(pitchNote,originalNote,key_press, time.Milliseconds);
+                var time = noteKey.TimeAs<MetricTimeSpan>(tempoMap);
+                var endTime = noteKey.EndTimeAs<MetricTimeSpan>(tempoMap);
+                return new NoteKeyboard(pitchNote,originalNote,key_press, (long)(endTime.TotalMilliseconds - time.TotalMilliseconds));
             }
            
             catch (Exception)
