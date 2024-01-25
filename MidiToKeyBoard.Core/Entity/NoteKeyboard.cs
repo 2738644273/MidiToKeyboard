@@ -28,6 +28,8 @@ namespace MidiToKeyboard.Midi.Entity
         public NoteBaseInfo OldNote { get;}
         public NoteKeyboard(NoteBaseInfo newNote, NoteBaseInfo oldNote, EnumKey key, double millisecond)
         {
+            NewNote = newNote;
+            OldNote = oldNote;
             Key = key;
             Millisecond = millisecond;
 

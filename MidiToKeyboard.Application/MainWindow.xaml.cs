@@ -191,7 +191,11 @@ namespace MidiToKeyboard.Application
                 //logInfo.Text += info;
                 //logInfo.ScrollToEnd();
                 //mPressKey.KeyPress(obj.Key, (int)0);
-                //mPressKey.KeyPress(obj.Key,obj.Millisecond);
+                if (obj.Key != EnumKey.None)
+                {
+                    mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond).Wait();
+                }
+                
             }
             catch (Exception exception)
             {
