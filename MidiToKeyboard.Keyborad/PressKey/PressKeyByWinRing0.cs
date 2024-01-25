@@ -19,7 +19,7 @@ namespace MidiToKeyboard.Keyborad.PressKey
             WinRing0.KeyDown(key);//按下
         }
 
-        public async Task KeyPress(char key, int milliseconds)
+        public async Task KeyPress(char key, double milliseconds)
         {
             KeyDown(key);//按下
             await Task.Delay(TimeSpan.FromMilliseconds(milliseconds));

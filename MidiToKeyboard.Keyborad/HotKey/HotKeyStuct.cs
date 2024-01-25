@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Windows.Input;
-
+using MidiToKeyBoard.Core.Constant;
 using MidiToKeyboard.Keyborad.PressKey;
 
 namespace MidiToKeyboard.Keyborad.HotKey

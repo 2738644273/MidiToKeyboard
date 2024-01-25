@@ -24,6 +24,8 @@ using Vanara.PInvoke;
 using Wpf.Ui.Interop.WinDef;
 using System.Diagnostics;
 using System.Linq;
+using MidiToKeyBoard.Core.Constant;
+using TestKeyboard.PressKey;
 using static Vanara.PInvoke.Gdi32;
 
 namespace MidiToKeyboard.Application
@@ -44,7 +46,7 @@ namespace MidiToKeyboard.Application
         {
             InitializeComponent();
             //初始化按键
-            mPressKey.Initialize(EnumWindowsType.Win32);
+            mPressKey.Initialize(EnumWindowsType.Win64);
             MainWindowViewModel = new MainWindowViewModel();
             DataContext = MainWindowViewModel;
 
@@ -180,7 +182,7 @@ namespace MidiToKeyboard.Application
         {
             try
             {
-                string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteNumber}) 播放音符: {obj.NewNote}({obj.NewNote.NoteNumber}) 按下: {obj.Key},时间:{obj.Millisecond}";
+                string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteName}) 播放音符: {obj.NewNote}({obj.NewNote.NoteName}) 按下: {obj.Key},时间:{obj.Millisecond}";
                 Debug.WriteLine(info);
                 //if (logInfo.Text.Length>400)
                 //{
@@ -189,7 +191,7 @@ namespace MidiToKeyboard.Application
                 //logInfo.Text += info;
                 //logInfo.ScrollToEnd();
                 //mPressKey.KeyPress(obj.Key, (int)0);
-                mPressKey.KeyPress(obj.Key, (int)obj.Millisecond);
+                //mPressKey.KeyPress(obj.Key,obj.Millisecond);
             }
             catch (Exception exception)
             {

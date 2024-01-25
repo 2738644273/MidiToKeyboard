@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using MidiToKeyBoard.Core.Constant;
 using MidiToKeyboard.Keyborad.PressKey;
 using Vanara.PInvoke;
 

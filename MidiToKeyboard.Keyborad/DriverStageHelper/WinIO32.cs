@@ -1,6 +1,7 @@
 ﻿using MidiToKeyboard.Keyborad.PressKey;
 using System;
 using System.Runtime.InteropServices;
+using MidiToKeyBoard.Core.Constant;
 
 namespace MidiToKeyboard.Keyborad.DriverStageHelper
 {

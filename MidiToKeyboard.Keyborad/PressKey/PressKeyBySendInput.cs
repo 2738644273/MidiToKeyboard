@@ -28,7 +28,7 @@ namespace TestKeyboard.PressKey
             SendInputHelper.SendInput(1, input, Marshal.SizeOf(default(SendInputHelper.INPUT)));
         }
 
-        public async Task KeyPress(char key,int milliseconds)
+        public async Task KeyPress(char key, double milliseconds)
         {
             KeyDown(key);
             await Task.Delay(TimeSpan.FromMilliseconds(milliseconds));

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Drawing.Design;
 
-namespace MidiToKeyboard.Keyborad.PressKey
+namespace MidiToKeyBoard.Core.Constant
 {
 
     [Flags]

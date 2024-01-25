@@ -11,6 +11,8 @@ using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Melanchall.DryWetMidi.MusicTheory;
 using Melanchall.DryWetMidi.Tools;
+using MidiToKeyBoard.Core.Constant;
+using MidiToKeyBoard.Core.Entity;
 using MidiToKeyboard.Midi.Entity;
 using MidiToKeyboard.Midi.Util;
 using Note = Melanchall.DryWetMidi.Interaction.Note;
@@ -85,6 +87,20 @@ namespace MidiToKeyboard.Midi.MidiSong
 
         }
 
+        public EnumKey ParseToKey(int pitch)
+        {
+            int index = pitch / Config.OctaveInterval;
+            if (index>=Config.KeyTable.Count)
+            {
+                return EnumKey.None;
+            }
+            int  position= pitch% Config.OctaveInterval;
+            if (position >= Config.KeyTable[index].Count)
+            {
+                return EnumKey.None;
+            }
+            return Config.KeyTable[index][position];
+        }
         /// <summary>
         /// 计算最佳偏移值
         /// </summary>
@@ -92,7 +108,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         public int ComputeBestShift()
         {
             int octave_interval = Config.OctaveInterval;
-            string keytable = Config.Keytable;
+            var keytable = Config.KeyTable;
             int[] note_counter = new int[octave_interval];
             int[] octave_list = new int[11];
 
@@ -108,12 +124,12 @@ namespace MidiToKeyboard.Midi.MidiSong
                 for (int i = 0; i < octave_interval; i++)
                 {
                     int note_pitch = (midiKey.NoteNumber + i) % octave_interval;
-                    if (keytable[note_pitch] != '?')
-                    {
-                        note_counter[i]++;
-                        int note_octave = (midiKey.NoteNumber + i) / octave_interval;
-                        octave_list[note_octave]++;
-                    }
+                    //if (keytable[note_pitch] != '?')
+                    //{
+                    //    note_counter[i]++;
+                    //    int note_octave = (midiKey.NoteNumber + i) / octave_interval;
+                    //    octave_list[note_octave]++;
+                    //}
                 }
             }
 
@@ -146,7 +162,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         {
             int shifting = Shifting;
             int octave_interval = Config.OctaveInterval;
-            string keytable = Config.Keytable;
+            string keytable = "z?x?cv?b?n?m" + "a?s?df?g?h?j" + "q?w?er?t?y?u";
             int c3_pitch = Config.C3Pitch;
             int c5_pitch = Config.C5Pitch;
             int b5_pitch = Config.B5Pitch;
@@ -159,20 +175,31 @@ namespace MidiToKeyboard.Midi.MidiSong
                 else if (pitch > b5_pitch)
                     pitch = pitch % octave_interval + c5_pitch;
 
-                //获取音符
-                var originalNote = new Note(new SevenBitNumber((byte)original_pitch), noteKey.Length, noteKey.Time);
-                var pitchNote = new Note(new SevenBitNumber((byte)pitch), noteKey.Length, noteKey.Time);
-
                 if (pitch < c3_pitch || pitch > b5_pitch)
                 {
                     Debug.WriteLine("超出音域，跳过这个音符");
                     return null;
                 }
 
+                //获取音符
+                var originalNote = new Note(new SevenBitNumber((byte)original_pitch), noteKey.Length, noteKey.Time);
+                var pitchNote = new Note(new SevenBitNumber((byte)pitch), noteKey.Length, noteKey.Time);
+
                 char key_press = char.ToUpper(keytable[pitch - c3_pitch]);
                 var time = noteKey.TimeAs<MetricTimeSpan>(tempoMap);
                 var endTime = noteKey.EndTimeAs<MetricTimeSpan>(tempoMap);
-                return new NoteKeyboard(pitchNote,originalNote,key_press, (long)(endTime.TotalMilliseconds - time.TotalMilliseconds));
+                var newNote = new NoteBaseInfo()
+                {
+                    MidiPitchVoice = pitchNote.NoteNumber,
+                    NoteName = pitchNote?.ToString()
+                };
+
+                var oldNote = new NoteBaseInfo()
+                {
+                    MidiPitchVoice = originalNote.NoteNumber,
+                    NoteName = originalNote?.ToString()
+                };
+                return new NoteKeyboard(newNote, oldNote, EnumKey.A, (endTime.TotalMilliseconds - time.TotalMilliseconds));
             }
            
             catch (Exception)

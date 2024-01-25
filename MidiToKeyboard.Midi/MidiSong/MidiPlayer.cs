@@ -8,7 +8,7 @@ using Melanchall.DryWetMidi.Common;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
-using MidiToKeyboard.Keyborad.PressKey;
+
 using MidiToKeyboard.Midi.Entity;
 
 namespace MidiToKeyboard.Midi.MidiSong
@@ -84,9 +84,9 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <param name="length"></param>
         /// <param name="playbackTime"></param>
         /// <returns></returns>
-        private NotePlaybackData NoteHandler(NotePlaybackData data, long time, long length, TimeSpan playbackTime)
+        private NotePlaybackData? NoteHandler(NotePlaybackData data, long time, long length, TimeSpan playbackTime)
         {
-            //通道列表存在该音符就播放，否则跳过该音符
+            //通道列表存在该通道就播放，否则跳过该通道的所有音符
             if (PlayingChannels.Contains(data.Channel))
             {
                 Song.PlaybackProgressTime = Playback.GetCurrentTime<MetricTimeSpan>();

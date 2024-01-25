@@ -1,4 +1,5 @@
-﻿using MidiToKeyboard.Keyborad.PressKey;
+﻿using MidiToKeyBoard.Core.Constant;
+using MidiToKeyboard.Keyborad.PressKey;
 using Vanara.PInvoke;
 
 namespace MidiToKeyboard.Keyborad.HotkeyCapture;

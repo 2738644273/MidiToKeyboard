@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
+using MidiToKeyBoard.Core.Constant;
 using MidiToKeyboard.Keyborad.DriverStageHelper;
 
 
@@ -45,7 +46,7 @@ namespace MidiToKeyboard.Keyborad.PressKey
             }
         }
 
-        public async Task KeyPress(char key, int milliseconds)
+        public async Task KeyPress(char key, double milliseconds)
         {
            
             KeyDown(key);
