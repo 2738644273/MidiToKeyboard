@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Kirara.png" />
+    <None Remove="Assets\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Prism.DryIoc" Version="9.0.271-pre" />
+    <PackageReference Include="Prism.Wpf" Version="9.0.271-pre" />
+    <PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MidiToKeyBoard.Core\MidiToKeyBoard.Core.csproj" />
+    <ProjectReference Include="..\MidiToKeyboard.Keyborad\MidiToKeyboard.Keyborad.csproj" />
+    <ProjectReference Include="..\MidiToKeyboard.Midi\MidiToKeyboard.Midi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\logo.png" />
+  </ItemGroup>
+
+</Project>
