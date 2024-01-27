@@ -22,6 +22,7 @@
     <ProjectReference Include="..\MidiToKeyBoard.Core\MidiToKeyBoard.Core.csproj" />
     <ProjectReference Include="..\MidiToKeyboard.Keyborad\MidiToKeyboard.Keyborad.csproj" />
     <ProjectReference Include="..\MidiToKeyboard.Midi\MidiToKeyboard.Midi.csproj" />
+    <ProjectReference Include="..\MidiToKeyboard.Net\MidiToKeyboard.Net.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -51,6 +51,16 @@
                     <Button Click="ButtonBase2_OnClick" Margin="10,0,10,0">(Ctrl+F11)暂停</Button>
                    <TextBlock>上一首(Ctrl + F10)  下一首(Ctrl + F12)</TextBlock>
                 </WrapPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">开启弹琴模式</TextBlock>
+                    <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>    
+                </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"  Text="IP："></TextBlock>
+                    <TextBox x:Name="Ip" Width="300"></TextBox>
+                    <Button x:Name="connectBtn" Click="connectBtn_Click">连接</Button>
+                    <Button x:Name="createConnectBtn" Click="createConnectBtn_Click" Margin="10,0,0,0">创建连接</Button>
+                </StackPanel>
                 <StackPanel>
                     <TextBlock >消息：</TextBlock>
                     <ui:TextBox Margin="0,10,0,0" Name="logInfo"  Height="368"></ui:TextBox>
