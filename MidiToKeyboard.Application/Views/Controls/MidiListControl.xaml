@@ -8,21 +8,22 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:mvvm="http://prismlibrary.com/"
              d:DesignHeight="450" d:DesignWidth="800">
-  <StackPanel Margin="5">
-      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-          <ui:SymbolIcon
-              HorizontalAlignment="Left"
-              FontSize="26"
-              Symbol="ReceiptPlay24" VerticalAlignment="Center" />
+
+    <StackPanel Margin="5">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <ui:SymbolIcon
+                HorizontalAlignment="Left"
+                FontSize="26"
+                Symbol="ReceiptPlay24" VerticalAlignment="Center" />
             <ui:TextBlock Margin="5,0,0,0" VerticalAlignment="Center">文件列表</ui:TextBlock>
         </StackPanel>
-      <ListView ItemsSource="{Binding MidiModels}">
+        <ListView ItemsSource="{Binding MidiModels}" MouseDoubleClick="Control_OnMouseDoubleClick">
             <ListView.ItemTemplate>
-              <DataTemplate>
-                    <TextBlock  Padding="10,0,0,0"  Text="{Binding FileName}" />
-              </DataTemplate>
-          </ListView.ItemTemplate>
-      </ListView>
-     
+                <DataTemplate>
+                    <TextBlock Padding="10,0,0,0"  Text="{Binding FileName}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
     </StackPanel>
 </UserControl>
