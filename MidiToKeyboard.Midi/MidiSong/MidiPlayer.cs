@@ -32,9 +32,13 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// </summary>
         private OutputDevice? OutputDevice { get; }
         /// <summary>
-        /// 需要演奏的通道
+        /// 总计时间
         /// </summary>
-        public List<FourBitNumber> PlayingChannels { get; set; }
+        public MetricTimeSpan TotalTime  = new MetricTimeSpan(0);
+        /// <summary>
+        /// 播放进度
+        /// </summary>
+        public MetricTimeSpan PlaybackProgressTime { get; set; } = new (0);
         /// <summary>
         /// 演奏器类
         /// </summary>
@@ -50,6 +54,11 @@ namespace MidiToKeyboard.Midi.MidiSong
             PlayingChannels = song.MidiFile.GetChannels().ToList();
             Playback.NotesPlaybackStarted += Playback_NotesPlaybackStarted;
             Playback.NoteCallback = NoteHandler;
+    
+            Playback.EventPlayed += (sender, args) =>
+            {
+                PlaybackProgressTime = Playback.GetCurrentTime<MetricTimeSpan>();
+            };
         }
         /// <summary>
         /// 音符开始演奏时触发键盘转换
@@ -90,9 +99,8 @@ namespace MidiToKeyboard.Midi.MidiSong
         private NotePlaybackData? NoteHandler(NotePlaybackData data, long time, long length, TimeSpan playbackTime)
         {
             //通道列表存在该通道就播放，否则跳过该通道的所有音符
-            if (PlayingChannels.Contains(data.Channel))
+            if (Song.PlayingChannels.Contains(data.Channel))
             {
-                Song.PlaybackProgressTime = Playback.GetCurrentTime<MetricTimeSpan>();
                 var originalNote = (int)data.NoteNumber;
                 var modifiedToneKey = originalNote + Song.ModifiedTone;
                 //转换后音调
@@ -102,6 +110,8 @@ namespace MidiToKeyboard.Midi.MidiSong
 
             return null;
         }
+ 
+
         /// <summary>
         /// 开始播放
         /// </summary>
@@ -111,7 +121,7 @@ namespace MidiToKeyboard.Midi.MidiSong
             //设置曲速
             Playback.Speed = Song.Speed;
             Playback.Start();
-            Playback.MoveToTime(Song.PlaybackProgressTime);
+            Playback.MoveToTime(PlaybackProgressTime);
         }
         /// <summary>
         /// 暂停

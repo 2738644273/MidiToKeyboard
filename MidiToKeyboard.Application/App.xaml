@@ -2,9 +2,12 @@
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-                  xmlns:dryIoc="http://prismlibrary.com/">
+                  xmlns:dryIoc="http://prismlibrary.com/"
+                  xmlns:converts="clr-namespace:MidiToKeyboard.App.Converts">
     <Application.Resources>
+ 
         <ResourceDictionary>
+            <converts:BoolToVisibilityConvert x:Key="BoolToVisibilityConvert"/>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />

@@ -33,17 +33,19 @@
         </ui:TitleBar>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="7*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ContentControl Grid.Column="0"  mvvm:RegionManager.RegionName="LeftRegion" />
+            <Border BorderBrush="Gainsboro" BorderThickness="0,0,1,0">
+            <ContentControl Grid.Column="0"   mvvm:RegionManager.RegionName="LeftRegion" />
+            </Border>
            <Grid Grid.Column="1">
                <Grid.RowDefinitions>
-                   <RowDefinition Height="5*"></RowDefinition>
+                   <RowDefinition Height="6*"></RowDefinition>
                    <RowDefinition Height="1*"></RowDefinition>
                </Grid.RowDefinitions>
                <ContentControl Grid.Row="0"  mvvm:RegionManager.RegionName="MainRegion" />
-                <ContentControl Grid.Row="1"  mvvm:RegionManager.RegionName="BottomRegion" />
+               <ContentControl Grid.Row="1"  mvvm:RegionManager.RegionName="BottomRegion" />
            </Grid>
         </Grid>
     </Grid>

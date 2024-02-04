@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MidiToKeyboard.App.Events;
+using MidiToKeyboard.App.Models;
 using MidiToKeyboard.App.ViewModels;
 
 namespace MidiToKeyboard.App.Views.Controls
@@ -21,10 +23,29 @@ namespace MidiToKeyboard.App.Views.Controls
     /// </summary>
     public partial class OperatingStationControl
     {
-        public OperatingStationControl(OperatingStationControlViewModel operatingStationControlViewModel)
+        private readonly OperatingStationControlViewModel _operatingStationControlViewModel;
+        private readonly IEventAggregator _eventAggregator;
+        private  MidiModel _midiModel;
+        public OperatingStationControl(OperatingStationControlViewModel operatingStationControlViewModel,IEventAggregator eventAggregator)
         {
             InitializeComponent();
             DataContext = operatingStationControlViewModel;
+            _operatingStationControlViewModel = operatingStationControlViewModel;
+            _eventAggregator = eventAggregator;
+        }
+
+        private void LoadMidi(MidiModel midiModel)
+        {
+            _midiModel = midiModel;
+        }
+        private void OperatingStationControl_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _eventAggregator.GetEvent<ToPlayMidiEvent>().Subscribe(LoadMidi);
+        }
+
+        private void OperatingStationControl_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _eventAggregator.GetEvent<ToPlayMidiEvent>().Unsubscribe(LoadMidi);
         }
     }
 }

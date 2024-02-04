@@ -7,8 +7,26 @@
              mc:Ignorable="d"  
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:mvvm="http://prismlibrary.com/"
+             Loaded="ConsoleControl_OnLoaded" 
+             Unloaded="ConsoleControl_OnUnloaded"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    
+    <Grid >
+        <Slider Minimum="{Binding ProcessorMinValue}" IsEnabled="{Binding IsPause}"  Maximum="{Binding ProcessorMaxValue}" Value="{Binding ProcessorCurrentValue}"></Slider>
+        <Grid  VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ui:SymbolIcon VerticalAlignment="Center" Cursor="Hand" HorizontalAlignment="Right" Symbol="Previous16" FontSize="36" Grid.Column="0">
+            </ui:SymbolIcon>
+            <ui:SymbolIcon  VerticalAlignment="Center" Width="36" Visibility="{Binding IsPlay,Converter={StaticResource BoolToVisibilityConvert}}"  MouseLeftButtonDown="OnStartOrStopClick" Cursor="Hand" Symbol="Play16" FontSize="36" Grid.Column="1">
+            </ui:SymbolIcon>
+            <ui:SymbolIcon  VerticalAlignment="Center" Width="36" Visibility="{Binding IsPause,Converter={StaticResource BoolToVisibilityConvert}}"  MouseLeftButtonDown="OnStartOrStopClick" Cursor="Hand" Symbol="Pause16" FontSize="36" Grid.Column="1">
+            </ui:SymbolIcon>
+            <ui:SymbolIcon  VerticalAlignment="Center"  Cursor="Hand"  HorizontalAlignment="Left" Symbol="Next16" FontSize="36" Grid.Column="2">
+            </ui:SymbolIcon>
+        </Grid>
     </Grid>
 </UserControl>

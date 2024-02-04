@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -26,7 +27,11 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// Midi文件
         /// </summary>
         public MidiFile MidiFile { get; }
-        public List<TrackChunk>  TrackChunks { get; }
+
+        /// <summary>
+        /// 所有音轨块
+        /// </summary>
+        public List<TrackChunk> TrackChunks { get; } 
         /// <summary>
         /// 节奏表
         /// </summary>
@@ -53,9 +58,14 @@ namespace MidiToKeyboard.Midi.MidiSong
         public double Speed { get; set; } = 1d;
 
         /// <summary>
-        /// 播放进度
+        /// 所有节奏通道
         /// </summary>
-        public MetricTimeSpan PlaybackProgressTime { get; set; } = new MetricTimeSpan(0);
+        public List<FourBitNumber> AllChannels => MidiFile.GetChannels().ToList();
+
+        /// <summary>
+        /// 需要演奏的通道
+        /// </summary>
+        public List<FourBitNumber> PlayingChannels { get; set; }
         /// <summary>
         /// 获取Midi播放器
         /// </summary>
@@ -73,7 +83,8 @@ namespace MidiToKeyboard.Midi.MidiSong
             TrackChunks = MidiFile.GetTrackChunks().ToList();
             //获取最佳偏移值
             Shifting = ComputeBestShift();
-
+            //设置默认通道
+            PlayingChannels = AllChannels;
         }
         public Song(string midiPath, SongConfig songConfig)
         {
