@@ -29,6 +29,9 @@ using TestKeyboard.PressKey;
 using static Vanara.PInvoke.Gdi32;
 using MidiToKeyboard.Net;
 using System.ComponentModel;
+using MidiToKeyboard.Net.Server;
+using System.Net;
+using MidiToKeyboard.Net.Client;
 
 namespace MidiToKeyboard.Application
 {
@@ -150,7 +153,7 @@ namespace MidiToKeyboard.Application
            if (SocketService != null)
             {
                 this.logInfo.Text += "检测到其他客户端的链接，发送协同播放命令\r\n";
-                SocketService.SendMessage("play");
+                SocketService.Multicast("play");
             }
           midiPlayer =  Start(currentSongView);
         }
@@ -160,16 +163,16 @@ namespace MidiToKeyboard.Application
             if (SocketService != null)
             {
                 this.logInfo.Text += "检测到其他客户端的链接，发送协同停止命令\r\n";
-                SocketService.SendMessage("stop");
+                SocketService.Multicast("stop");
             }
             Stop();
         }
         protected override void OnClosing(CancelEventArgs e)
         {
-            SocketService?.Disconnect(true);
+            SocketService?.DisconnectAll();
             SocketService?.Dispose();
 
-            SocketClient?.Disconnect(true);
+            SocketClient?.Disconnect();
             SocketClient?.Dispose();
         }
         private MidiPlayer Start(SongView songView= null)
@@ -196,7 +199,7 @@ namespace MidiToKeyboard.Application
             return midiPlayer;
         }
 
-        private async void Midi_OnPlayKey(NoteKeyboard obj)
+        private  async Task Midi_OnPlayKey(NoteKeyboard obj)
         {
             try
             {
@@ -212,7 +215,7 @@ namespace MidiToKeyboard.Application
                 if (obj.Key != EnumKey.None)
                 {
                    
-                       await mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond);
+                       mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond);
                     
                   
                 }
@@ -278,18 +281,19 @@ namespace MidiToKeyboard.Application
               
             }
         }
-        SocketClient SocketClient { get; set; }
-        SocketService SocketService { get; set; }
+        ClientCore SocketClient { get; set; }
+        ServerCore SocketService { get; set; }
         private void connectBtn_Click(object sender, RoutedEventArgs e)
         {
             if (SocketClient is object)
             {
-                SocketClient.SendMessage("客户端发送了1");
+                SocketClient.Send("客户端发送了1");
             }
             if (!string.IsNullOrWhiteSpace(Ip.Text))
             {
-                SocketClient = SocketClient.CreateSocketClient(Ip.Text);
-                SocketClient.OnReceive = (str) =>
+                SocketClient = new ClientCore(Ip.Text,8887);
+                SocketClient.Connect();
+                SocketClient.OnReceive= (str) =>
                 {
 
                     Dispatcher.Invoke(new Action(() =>
@@ -299,7 +303,7 @@ namespace MidiToKeyboard.Application
                         {
                             midiPlayer = Start(currentSongView);
                         }
-                        else if(str == "stop")
+                        else if (str == "stop")
                         {
                             Stop();
                         }
@@ -312,12 +316,13 @@ namespace MidiToKeyboard.Application
         {
             if(SocketService is object)
             {
-                SocketService.SendMessage("服务器发送测试1");
+                SocketService.Multicast("服务器发送测试1");
             }
-            SocketService = SocketService.CreateSocketService(Ip.Text);
+            SocketService = new ServerCore(IPAddress.Any,8887);
+            SocketService.Start();
             try
             {
-                SocketService.SendMessage("发送测试1");
+                SocketService.Multicast("发送测试1");
             }
             catch (Exception)
             {

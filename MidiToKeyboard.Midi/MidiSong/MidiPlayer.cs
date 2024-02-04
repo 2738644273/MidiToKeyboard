@@ -21,7 +21,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <summary>
         /// 演奏事件
         /// </summary>
-        public event Action<NoteKeyboard> OnPlay;
+        public event Func<NoteKeyboard,Task>? OnPlay;
         public Playback Playback { get; }
         /// <summary>
         /// Midi演奏对象
@@ -30,7 +30,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <summary>
         /// 输出到音频
         /// </summary>
-        private OutputDevice OutputDevice { get; }
+        private OutputDevice? OutputDevice { get; }
         /// <summary>
         /// 需要演奏的通道
         /// </summary>
@@ -45,13 +45,8 @@ namespace MidiToKeyboard.Midi.MidiSong
         {
             Song = song;
             Playback = song.GetPlay();
-            if (outputAudio != null)
-            {
-                OutputDevice = outputAudio;
-                Playback.OutputDevice = OutputDevice;
-
-            }
-
+            OutputDevice = outputAudio;
+            Playback.OutputDevice = OutputDevice;
             PlayingChannels = song.MidiFile.GetChannels().ToList();
             Playback.NotesPlaybackStarted += Playback_NotesPlaybackStarted;
             Playback.NoteCallback = NoteHandler;
@@ -61,17 +56,25 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void Playback_NotesPlaybackStarted(object? sender, NotesEventArgs e)
+       async void Playback_NotesPlaybackStarted(object? sender, NotesEventArgs e)
         {
-   
-            foreach (var note in e.Notes)
+
+            try
             {
-                //转换成按键
-                NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note,Playback.TempoMap);
-                if (noteKeyboard is not null && OnPlay is not null)
+                foreach (var note in e.Notes)
                 {
-                    OnPlay(noteKeyboard);
+                    //转换成按键
+                    NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note, Playback.TempoMap);
+                    if (noteKeyboard is not null && OnPlay is not null)
+                    {
+                        await OnPlay(noteKeyboard);
+                    }
                 }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
         }
