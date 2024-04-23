@@ -32,6 +32,7 @@ using System.ComponentModel;
 using MidiToKeyboard.Net.Server;
 using System.Net;
 using MidiToKeyboard.Net.Client;
+using Prism;
 
 namespace MidiToKeyboard.Application
 {
@@ -147,10 +148,10 @@ namespace MidiToKeyboard.Application
             return null;
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            
-           if (SocketService != null)
+     
+            if (SocketService != null)
             {
                 this.logInfo.Text += "检测到其他客户端的链接，发送协同播放命令\r\n";
                 SocketService.Multicast("play");
@@ -190,17 +191,25 @@ namespace MidiToKeyboard.Application
             GC.SuppressFinalize(this);
             songView.Song.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
             songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
-            OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+            
+           OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
             isStart = true;
             var midi = new MidiPlayer(songView.Song, null);
+            midi.PlaybackProgressTime = songView.MetricTimeSpan;
             midi.OnPlay += Midi_OnPlayKey;
+            midi.Playback.EventPlayed += (object? sender, MidiEventPlayedEventArgs e)=>
+            {
+                songView.MetricTimeSpan = midi.PlaybackProgressTime;
+            };
              midiPlayer = midi;
              midiPlayer.Play();
             return midiPlayer;
         }
 
+   
         private  async Task Midi_OnPlayKey(NoteKeyboard obj)
         {
+
             try
             {
                 string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteName}) 播放音符: {obj.NewNote}({obj.NewNote.NoteName}) 按下: {obj.Key},时间:{obj.Millisecond}";
@@ -214,10 +223,21 @@ namespace MidiToKeyboard.Application
                 //mPressKey.KeyPress(obj.Key, (int)0);
                 if (obj.Key != EnumKey.None)
                 {
-                   
-                       mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond);
-                    
+                    if (PlayPP)
+                    {
+                        await Task.Run(() =>
+                        {
+                            mPressKey.KeyPress(obj.Key.ToString()[0], 0);
+                        });
+                    }
+                    else
+                    {
+                       
+                            mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond);
+                       
+                    }
                   
+              
                 }
                 
             }
@@ -235,6 +255,7 @@ namespace MidiToKeyboard.Application
                 return;
             }
             isStart = false;
+            
             midiPlayer.Stop();
         }
 

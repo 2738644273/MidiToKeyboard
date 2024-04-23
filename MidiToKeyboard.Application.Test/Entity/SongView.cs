@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Melanchall.DryWetMidi.Interaction;
 using MidiToKeyboard.Midi.MidiSong;
 
 namespace MidiToKeyboard.Application.Entity
@@ -20,6 +21,6 @@ namespace MidiToKeyboard.Application.Entity
         public string FileName { get; set; }
         public string FilePath { get; }
 
-     
+        public MetricTimeSpan MetricTimeSpan { get; set; } = new MetricTimeSpan(0);
     }
 }

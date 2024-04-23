@@ -39,6 +39,8 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// 播放进度
         /// </summary>
         public MetricTimeSpan PlaybackProgressTime { get; set; } = new (0);
+        public List<FourBitNumber> PlayingChannels { get; set; }
+
         /// <summary>
         /// 演奏器类
         /// </summary>
@@ -54,7 +56,7 @@ namespace MidiToKeyboard.Midi.MidiSong
             PlayingChannels = song.MidiFile.GetChannels().ToList();
             Playback.NotesPlaybackStarted += Playback_NotesPlaybackStarted;
             Playback.NoteCallback = NoteHandler;
-    
+            Playback.InterruptNotesOnStop = false;
             Playback.EventPlayed += (sender, args) =>
             {
                 PlaybackProgressTime = Playback.GetCurrentTime<MetricTimeSpan>();
@@ -76,7 +78,7 @@ namespace MidiToKeyboard.Midi.MidiSong
                     NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note, Playback.TempoMap);
                     if (noteKeyboard is not null && OnPlay is not null)
                     {
-                        await OnPlay(noteKeyboard);
+                         await OnPlay(noteKeyboard);
                     }
                 }
             }
@@ -120,6 +122,7 @@ namespace MidiToKeyboard.Midi.MidiSong
 
             //设置曲速
             Playback.Speed = Song.Speed;
+         //必须先开始再移动
             Playback.Start();
             Playback.MoveToTime(PlaybackProgressTime);
         }
