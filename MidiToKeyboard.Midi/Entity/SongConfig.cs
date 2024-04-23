@@ -40,15 +40,15 @@ namespace MidiToKeyboard.Midi.Entity
                 {
                   new ()
                   {
-                      EnumKey.Z,EnumKey.None,EnumKey.X,EnumKey.None,EnumKey.C,EnumKey.V,EnumKey.None,EnumKey.B,EnumKey.None,EnumKey.N,EnumKey.None,EnumKey.M
+                      EnumKey.Z,EnumKey.S,EnumKey.X,EnumKey.D,EnumKey.C,EnumKey.V,EnumKey.G,EnumKey.B,EnumKey.H,EnumKey.N,EnumKey.J,EnumKey.M
                   }  ,
                   new ()
                   {
-                      EnumKey.A,EnumKey.None,EnumKey.S,EnumKey.None,EnumKey.D,EnumKey.F,EnumKey.None,EnumKey.G,EnumKey.None,EnumKey.H,EnumKey.None,EnumKey.J
+                      EnumKey.Oemcomma,EnumKey.L,EnumKey.OemPeriod,EnumKey.OemSemicolon,EnumKey.OemQuestion,EnumKey.Q,EnumKey.D2,EnumKey.W,EnumKey.D3,EnumKey.E,EnumKey.D4,EnumKey.R
                   },
                   new ()
                   {
-                      EnumKey.Q,EnumKey.None,EnumKey.W,EnumKey.None,EnumKey.E,EnumKey.R,EnumKey.None,EnumKey.T,EnumKey.None,EnumKey.Y,EnumKey.None,EnumKey.U
+                      EnumKey.T,EnumKey.D6,EnumKey.Y,EnumKey.D7,EnumKey.U,EnumKey.I,EnumKey.D9,EnumKey.O,EnumKey.D0,EnumKey.P,EnumKey.OemMinus,EnumKey.OemCloseBrackets
                   }
                 },
                //Keytable = "z?x?cv?b?n?m" + "a?s?df?g?h?j" + "q?w?er?t?y?u",
