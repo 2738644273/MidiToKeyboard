@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidiToKeyboard.Keyborad", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidiToKeyBoard.Core", "..\MidiToKeyBoard.Core\MidiToKeyBoard.Core.csproj", "{76E13E27-FED4-48B8-8195-855050ACAB17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidiToKeyboard.App", "..\MidiToKeyboard.Application\MidiToKeyboard.App.csproj", "{051C4B9E-A1C9-40DC-AD63-E29161D3B85F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidiToKeyboard.App", "..\MidiToKeyboard.Application\MidiToKeyboard.App.csproj", "{051C4B9E-A1C9-40DC-AD63-E29161D3B85F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidiToKeyboard.Net", "..\MidiToKeyboard.Net\MidiToKeyboard.Net.csproj", "{45F5D74C-20EE-45FC-904F-A0354998DB34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "..\WpfApp1\WpfApp1.csproj", "{2F7D76EB-6334-4ECC-8DB4-36A5F3E83596}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{051C4B9E-A1C9-40DC-AD63-E29161D3B85F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{051C4B9E-A1C9-40DC-AD63-E29161D3B85F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{051C4B9E-A1C9-40DC-AD63-E29161D3B85F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45F5D74C-20EE-45FC-904F-A0354998DB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F5D74C-20EE-45FC-904F-A0354998DB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45F5D74C-20EE-45FC-904F-A0354998DB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45F5D74C-20EE-45FC-904F-A0354998DB34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7D76EB-6334-4ECC-8DB4-36A5F3E83596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7D76EB-6334-4ECC-8DB4-36A5F3E83596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7D76EB-6334-4ECC-8DB4-36A5F3E83596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7D76EB-6334-4ECC-8DB4-36A5F3E83596}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

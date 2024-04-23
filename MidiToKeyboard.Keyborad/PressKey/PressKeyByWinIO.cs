@@ -46,11 +46,11 @@ namespace MidiToKeyboard.Keyborad.PressKey
             }
         }
 
-        public async Task KeyPress(char key, double milliseconds)
+        public void KeyPress(char key, double milliseconds)
         {
            
             KeyDown(key);
-            await Task.Delay(TimeSpan.FromMilliseconds(milliseconds));
+            Thread.Sleep((int)milliseconds);
             KeyUp(key);
           
         }

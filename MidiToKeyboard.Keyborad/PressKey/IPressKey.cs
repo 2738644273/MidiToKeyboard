@@ -9,7 +9,7 @@ namespace MidiToKeyboard.Keyborad.PressKey
     {
         bool Initialize(EnumWindowsType winType);
 
-        Task KeyPress(char key,double milliseconds);
+        void KeyPress(char key,double milliseconds);
 
         void KeyDown(char key);
 

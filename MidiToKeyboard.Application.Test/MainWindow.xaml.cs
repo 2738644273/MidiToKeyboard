@@ -27,6 +27,12 @@ using System.Linq;
 using MidiToKeyBoard.Core.Constant;
 using TestKeyboard.PressKey;
 using static Vanara.PInvoke.Gdi32;
+using MidiToKeyboard.Net;
+using System.ComponentModel;
+using MidiToKeyboard.Net.Server;
+using System.Net;
+using MidiToKeyboard.Net.Client;
+using Prism;
 
 namespace MidiToKeyboard.Application
 {
@@ -41,6 +47,7 @@ namespace MidiToKeyboard.Application
         private static SongView currentSongView = null;
         private static HotkeyHook KeyBindInfo = null;
         private static bool isStart = false;
+        public static bool PlayPP = false;
         private MainWindowViewModel MainWindowViewModel { get; }
         public MainWindow()
         {
@@ -141,27 +148,42 @@ namespace MidiToKeyboard.Application
             return null;
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            if (currentSongView is null)
+     
+            if (SocketService != null)
             {
-                System.Windows.MessageBox.Show("没有选择任何曲目");
-                return;
+                this.logInfo.Text += "检测到其他客户端的链接，发送协同播放命令\r\n";
+                SocketService.Multicast("play");
             }
-
           midiPlayer =  Start(currentSongView);
         }
 
         private void ButtonBase2_OnClick(object sender, RoutedEventArgs e)
         {
-
+            if (SocketService != null)
+            {
+                this.logInfo.Text += "检测到其他客户端的链接，发送协同停止命令\r\n";
+                SocketService.Multicast("stop");
+            }
             Stop();
         }
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            SocketService?.DisconnectAll();
+            SocketService?.Dispose();
 
+            SocketClient?.Disconnect();
+            SocketClient?.Dispose();
+        }
         private MidiPlayer Start(SongView songView= null)
         {
+            if (songView is null)
+            {
+                songView = GetSong(1);
+            }
             logInfo.Text = "";
-            logInfo.Text += $"切歌:{songView.FileName}-------------------------------";
+            logInfo.Text += $"切歌:{songView?.FileName}-------------------------------";
           
             midiPlayer?.Dispose();
             OutputDevice?.Dispose();
@@ -169,17 +191,25 @@ namespace MidiToKeyboard.Application
             GC.SuppressFinalize(this);
             songView.Song.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
             songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
-            OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+            
+           OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
             isStart = true;
             var midi = new MidiPlayer(songView.Song, null);
+            midi.PlaybackProgressTime = songView.MetricTimeSpan;
             midi.OnPlay += Midi_OnPlayKey;
+            midi.Playback.EventPlayed += (object? sender, MidiEventPlayedEventArgs e)=>
+            {
+                songView.MetricTimeSpan = midi.PlaybackProgressTime;
+            };
              midiPlayer = midi;
              midiPlayer.Play();
             return midiPlayer;
         }
 
-        private void Midi_OnPlayKey(NoteKeyboard obj)
+   
+        private  async Task Midi_OnPlayKey(NoteKeyboard obj)
         {
+
             try
             {
                 string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteName}) 播放音符: {obj.NewNote}({obj.NewNote.NoteName}) 按下: {obj.Key},时间:{obj.Millisecond}";
@@ -193,7 +223,21 @@ namespace MidiToKeyboard.Application
                 //mPressKey.KeyPress(obj.Key, (int)0);
                 if (obj.Key != EnumKey.None)
                 {
-                    mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond).Wait();
+                    if (PlayPP)
+                    {
+                        await Task.Run(() =>
+                        {
+                            mPressKey.KeyPress(obj.Key.ToString()[0], 0);
+                        });
+                    }
+                    else
+                    {
+                       
+                            mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond);
+                       
+                    }
+                  
+              
                 }
                 
             }
@@ -211,6 +255,7 @@ namespace MidiToKeyboard.Application
                 return;
             }
             isStart = false;
+            
             midiPlayer.Stop();
         }
 
@@ -256,6 +301,65 @@ namespace MidiToKeyboard.Application
                 }
               
             }
+        }
+        ClientCore SocketClient { get; set; }
+        ServerCore SocketService { get; set; }
+        private void connectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (SocketClient is object)
+            {
+                SocketClient.Send("客户端发送了1");
+            }
+            if (!string.IsNullOrWhiteSpace(Ip.Text))
+            {
+                SocketClient = new ClientCore(Ip.Text,8887);
+                SocketClient.Connect();
+                SocketClient.OnReceive= (str) =>
+                {
+
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        this.logInfo.Text += str + "\r\n";
+                        if (str == "play")
+                        {
+                            midiPlayer = Start(currentSongView);
+                        }
+                        else if (str == "stop")
+                        {
+                            Stop();
+                        }
+                    }));
+                };
+            }
+        }
+
+        private void createConnectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(SocketService is object)
+            {
+                SocketService.Multicast("服务器发送测试1");
+            }
+            SocketService = new ServerCore(IPAddress.Any,8887);
+            SocketService.Start();
+            try
+            {
+                SocketService.Multicast("发送测试1");
+            }
+            catch (Exception)
+            {
+
+                this.logInfo.Text = "没有客户端连接";
+            }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            PlayPP = true;
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            PlayPP = false;
         }
     }
 }

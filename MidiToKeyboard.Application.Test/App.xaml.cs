@@ -1,4 +1,5 @@
-﻿ 
+﻿
+using MidiToKeyboard.Net;
 using System.Windows;
 
 namespace MidiToKeyboard.Application

@@ -21,7 +21,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <summary>
         /// 演奏事件
         /// </summary>
-        public event Action<NoteKeyboard> OnPlay;
+        public event Func<NoteKeyboard,Task>? OnPlay;
         public Playback Playback { get; }
         /// <summary>
         /// Midi演奏对象
@@ -30,8 +30,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// <summary>
         /// 输出到音频
         /// </summary>
-        private OutputDevice OutputDevice { get; }
-
+        private OutputDevice? OutputDevice { get; }
         /// <summary>
         /// 总计时间
         /// </summary>
@@ -40,6 +39,8 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// 播放进度
         /// </summary>
         public MetricTimeSpan PlaybackProgressTime { get; set; } = new (0);
+        public List<FourBitNumber> PlayingChannels { get; set; }
+
         /// <summary>
         /// 演奏器类
         /// </summary>
@@ -50,16 +51,12 @@ namespace MidiToKeyboard.Midi.MidiSong
         {
             Song = song;
             Playback = song.GetPlay();
-            if (outputAudio != null)
-            {
-                OutputDevice = outputAudio;
-                Playback.OutputDevice = OutputDevice;
-            }
-            TotalTime = Playback.GetDuration<MetricTimeSpan>();
-            song.PlayingChannels = song.MidiFile.GetChannels().ToList();
+            OutputDevice = outputAudio;
+            Playback.OutputDevice = OutputDevice;
+            PlayingChannels = song.MidiFile.GetChannels().ToList();
             Playback.NotesPlaybackStarted += Playback_NotesPlaybackStarted;
             Playback.NoteCallback = NoteHandler;
-    
+            Playback.InterruptNotesOnStop = false;
             Playback.EventPlayed += (sender, args) =>
             {
                 PlaybackProgressTime = Playback.GetCurrentTime<MetricTimeSpan>();
@@ -70,17 +67,25 @@ namespace MidiToKeyboard.Midi.MidiSong
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void Playback_NotesPlaybackStarted(object? sender, NotesEventArgs e)
+       async void Playback_NotesPlaybackStarted(object? sender, NotesEventArgs e)
         {
-   
-            foreach (var note in e.Notes)
+
+            try
             {
-                //转换成按键
-                NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note,Playback.TempoMap);
-                if (noteKeyboard is not null && OnPlay is not null)
+                foreach (var note in e.Notes)
                 {
-                    OnPlay(noteKeyboard);
+                    //转换成按键
+                    NoteKeyboard? noteKeyboard = Song.GetKeyboardKey(note, Playback.TempoMap);
+                    if (noteKeyboard is not null && OnPlay is not null)
+                    {
+                         await OnPlay(noteKeyboard);
+                    }
                 }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
         }
@@ -117,6 +122,7 @@ namespace MidiToKeyboard.Midi.MidiSong
 
             //设置曲速
             Playback.Speed = Song.Speed;
+         //必须先开始再移动
             Playback.Start();
             Playback.MoveToTime(PlaybackProgressTime);
         }
