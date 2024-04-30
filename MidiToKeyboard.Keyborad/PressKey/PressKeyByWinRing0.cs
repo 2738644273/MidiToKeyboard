@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using MidiToKeyboard.Keyborad.DriverStageHelper;
+using MidiToKeyBoard.Core.Constant;
 
 namespace MidiToKeyboard.Keyborad.PressKey
 {
@@ -14,12 +15,12 @@ namespace MidiToKeyboard.Keyborad.PressKey
             return WinRing0.init();
         }
 
-        public void KeyDown(char key)
+        public void KeyDown(EnumKey key)
         {
             WinRing0.KeyDown(key);//按下
         }
 
-        public void KeyPress(char key, double milliseconds)
+        public void KeyPress(EnumKey key, double milliseconds)
         {
             KeyDown(key);//按下
             Thread.Sleep((int)milliseconds);
@@ -27,7 +28,7 @@ namespace MidiToKeyboard.Keyborad.PressKey
             KeyUp(key);//松开
         }
 
-        public void KeyUp(char key)
+        public void KeyUp(EnumKey key)
         {
             WinRing0.KeyUp(key);//松开
         }

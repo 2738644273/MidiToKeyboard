@@ -7,6 +7,7 @@ using System.Text;
 
 using MidiToKeyboard.Keyborad.DriverStageHelper;
 using MidiToKeyboard.Keyborad.PressKey;
+using MidiToKeyBoard.Core.Constant;
 
 namespace TestKeyboard.PressKey
 {
@@ -17,29 +18,29 @@ namespace TestKeyboard.PressKey
             return true;
         }
 
-        public void KeyDown(char key)
+        public void KeyDown(EnumKey key)
         {
             SendInputHelper.INPUT[] input = new SendInputHelper.INPUT[1];
             input[0].type = 1;
-            short num = SendInputHelper.VkKeyScan(key);
+            short num = (short)key;
             input[0].ki.wVk = num;
             input[0].ki.dwFlags = 0;
 
             SendInputHelper.SendInput(1, input, Marshal.SizeOf(default(SendInputHelper.INPUT)));
         }
 
-        public void KeyPress(char key, double milliseconds)
+        public void KeyPress(EnumKey key, double milliseconds)
         {
             KeyDown(key);
             Thread.Sleep((int)milliseconds);
             KeyUp(key);
         }
 
-        public void KeyUp(char key)
+        public void KeyUp(EnumKey key)
         {
             SendInputHelper.INPUT[] input = new SendInputHelper.INPUT[1];
             input[0].type = 1;
-            short num = SendInputHelper.VkKeyScan(key);
+            short num = (short)key;
             input[0].ki.wVk = num;
             input[0].ki.dwFlags = 2;
 

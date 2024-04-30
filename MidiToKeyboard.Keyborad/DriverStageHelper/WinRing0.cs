@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MidiToKeyBoard.Core.Constant;
+using System;
 using System.Runtime.InteropServices;
 
 namespace MidiToKeyboard.Keyborad.DriverStageHelper
@@ -32,21 +33,21 @@ namespace MidiToKeyboard.Keyborad.DriverStageHelper
             }
             while ((dwVal & 0x2) > 0);
         }
-        public static void KeyDown(char ch)
+        public static void KeyDown(EnumKey ch)
         {
             Console.WriteLine("Down ch 16进制: {0:X}", (byte)ch);
-            int btScancode = MapVirtualKey(ch, 0);
-            Console.WriteLine(btScancode);
-            Console.WriteLine("Down btScancode 16进制: {0:X}", (byte)btScancode);
+            int btScancode = MapVirtualKey((byte)ch, 0);
+            Console.WriteLine((int)ch);
+            Console.WriteLine("Down btScancode 16进制: {0:X}", (byte)(int)ch);
             KBCWait4IBE();
             ols.WriteIoPortByte(0x64, 0xd2);
             KBCWait4IBE();
             ols.WriteIoPortByte(0x60, (byte)btScancode);
         }
 
-        public static void KeyUp(char ch)
+        public static void KeyUp(EnumKey ch)
         {
-            int btScancode = MapVirtualKey(ch, 0);
+            int btScancode = MapVirtualKey((byte)ch, 0);
             KBCWait4IBE();
             ols.WriteIoPortByte(0x64, 0xd2);
             KBCWait4IBE();

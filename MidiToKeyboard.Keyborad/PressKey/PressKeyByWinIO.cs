@@ -31,7 +31,7 @@ namespace MidiToKeyboard.Keyborad.PressKey
             return true;
         }
 
-        public void KeyDown(char key)
+        public void KeyDown(EnumKey key)
         {
             switch (mWinType)
             {
@@ -46,7 +46,7 @@ namespace MidiToKeyboard.Keyborad.PressKey
             }
         }
 
-        public void KeyPress(char key, double milliseconds)
+        public void KeyPress(EnumKey key, double milliseconds)
         {
            
             KeyDown(key);
@@ -55,7 +55,7 @@ namespace MidiToKeyboard.Keyborad.PressKey
           
         }
 
-        public void KeyUp(char key)
+        public void KeyUp(EnumKey key)
         {
             switch (mWinType)
             {

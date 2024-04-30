@@ -48,7 +48,7 @@ namespace MidiToKeyboard.Midi.Entity
                   },
                   new ()
                   {
-                      EnumKey.T,EnumKey.D6,EnumKey.Y,EnumKey.D7,EnumKey.U,EnumKey.I,EnumKey.D9,EnumKey.O,EnumKey.D0,EnumKey.P,EnumKey.OemMinus,EnumKey.OemCloseBrackets
+                      EnumKey.T,EnumKey.D6,EnumKey.Y,EnumKey.D7,EnumKey.U,EnumKey.I,EnumKey.D9,EnumKey.O,EnumKey.D0,EnumKey.P,EnumKey.OemMinus,EnumKey.OemOpenBrackets
                   }
                 },
                //Keytable = "z?x?cv?b?n?m" + "a?s?df?g?h?j" + "q?w?er?t?y?u",

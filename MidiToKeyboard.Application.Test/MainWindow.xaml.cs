@@ -44,7 +44,7 @@ namespace MidiToKeyboard.Application
     {
         private static MidiPlayer midiPlayer = null;
         private static IPressKey mPressKey = new PressKeyByWinRing0();
-        private  static OutputDevice OutputDevice = null;
+        private static OutputDevice OutputDevice = null;
         private static SongView currentSongView = null;
         private static HotkeyHook KeyBindInfo = null;
         private static bool isStart = false;
@@ -61,8 +61,8 @@ namespace MidiToKeyboard.Application
             #region 热键注册
 
             Hotkey hotkey12 = new(HotKey.FromString("Ctrl + F12").ToString());
-            Hotkey hotkey11 = new (HotKey.FromString("Ctrl + F11").ToString());
-            Hotkey hotkey10 = new (HotKey.FromString("Ctrl + F10").ToString());
+            Hotkey hotkey11 = new(HotKey.FromString("Ctrl + F11").ToString());
+            Hotkey hotkey10 = new(HotKey.FromString("Ctrl + F10").ToString());
 
             KeyBindInfo = new HotkeyHook();
             KeyBindInfo.KeyPressed += KeyBindInfo_KeyPressed;
@@ -72,55 +72,36 @@ namespace MidiToKeyboard.Application
 
             #endregion
         }
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-        public static void PressKey(Keys key, bool up)
-        {
-            const int KEYEVENTF_EXTENDEDKEY = 0x1;
-            const int KEYEVENTF_KEYUP = 0x2;
-            if (up)
-            {
-
-                keybd_event((byte)key, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, (UIntPtr)0);
-
-            }
-            else
-            {
-
-                keybd_event((byte)key, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
-
-            }
-        }
 
         private void KeyBindInfo_KeyPressed(object? sender, KeyPressedEventArgs e)
         {
             SongView songView = null;
-   
-        
+
+
             //暂停
-            if (e.Key == EnumKey.F11&&e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
+            if (e.Key == EnumKey.F11 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
-            
+
                 if (currentSongView is null)
                 {
                     return;
                 }
-                
+
                 if (isStart)
                 {
                     Stop();
                 }
                 else
                 {
-           
-                    midiPlayer =  Start(currentSongView);
+
+                    midiPlayer = Start(currentSongView);
                 }
                 return;
             }
             //上一首
             if (e.Key == EnumKey.F10 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
-           
+
                 songView = GetSong(-1);
 
             }
@@ -128,17 +109,17 @@ namespace MidiToKeyboard.Application
             //下一首
             if (e.Key == EnumKey.F12 && e.Modifier == User32.HotKeyModifiers.MOD_CONTROL)
             {
-             
+
                 songView = GetSong(1);
 
             }
 
             if (songView is object)
             {
-               
+
                 midiPlayer = Start(songView);
             }
-            
+
 
         }
 
@@ -149,16 +130,16 @@ namespace MidiToKeyboard.Application
             var nextValue = selectI + ii;
             if (selectI == -1)
             {
-                if (allCount>0)
+                if (allCount > 0)
                 {
                     nextValue = 0;
                 }
             };
-          
-            if (nextValue >= 0&& nextValue < allCount)
+
+            if (nextValue >= 0 && nextValue < allCount)
             {
                 SongListBox.SelectedIndex = nextValue;
-                var song =  SongListBox.SelectedItem as SongView;
+                var song = SongListBox.SelectedItem as SongView;
                 if (song != null)
                 {
                     return song;
@@ -170,14 +151,28 @@ namespace MidiToKeyboard.Application
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-          
-    
+           //var a =  SongConfig.UseDefaultConfig();
+           
+           // foreach (var items in a.KeyTable)
+           // {
+           //     foreach (var item in items)
+           //     {
+           //         await Task.Delay(300);
+           //         mPressKey.KeyPress(item, 10);
+           //     }
+           // }
+            if (currentSongView is null)
+            {
+                return;
+
+            }
+
             if (SocketService != null)
             {
                 this.logInfo.Text += "检测到其他客户端的链接，发送协同播放命令\r\n";
                 SocketService.Multicast("play");
             }
-          midiPlayer =  Start(currentSongView);
+            midiPlayer = Start(currentSongView);
         }
 
         private void ButtonBase2_OnClick(object sender, RoutedEventArgs e)
@@ -197,7 +192,7 @@ namespace MidiToKeyboard.Application
             SocketClient?.Disconnect();
             SocketClient?.Dispose();
         }
-        private MidiPlayer Start(SongView songView= null)
+        private MidiPlayer Start(SongView songView = null)
         {
             if (songView is null)
             {
@@ -205,30 +200,30 @@ namespace MidiToKeyboard.Application
             }
             logInfo.Text = "";
             logInfo.Text += $"切歌:{songView?.FileName}-------------------------------";
-          
+
             midiPlayer?.Dispose();
             OutputDevice?.Dispose();
             GC.Collect();
             GC.SuppressFinalize(this);
             songView.Song.ModifiedTone = Convert.ToInt32(ModifiedToneTextBox.Text);
             songView.Song.Speed = Convert.ToDouble(SpeedTextBox.Text);
-            
-           OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
+
+            OutputDevice = OutputDevice.GetByName("Microsoft GS Wavetable Synth");
             isStart = true;
             var midi = new MidiPlayer(songView.Song, null);
             midi.PlaybackProgressTime = songView.MetricTimeSpan;
             midi.OnPlay += Midi_OnPlayKey;
-            midi.Playback.EventPlayed += (object? sender, MidiEventPlayedEventArgs e)=>
+            midi.Playback.EventPlayed += (object? sender, MidiEventPlayedEventArgs e) =>
             {
                 songView.MetricTimeSpan = midi.PlaybackProgressTime;
             };
-             midiPlayer = midi;
-             midiPlayer.Play();
+            midiPlayer = midi;
+            midiPlayer.Play();
             return midiPlayer;
         }
 
-   
-        private  async Task Midi_OnPlayKey(NoteKeyboard obj)
+
+        private async Task Midi_OnPlayKey(NoteKeyboard obj)
         {
 
             try
@@ -244,32 +239,29 @@ namespace MidiToKeyboard.Application
                 //mPressKey.KeyPress(obj.Key, (int)0);
                 if (obj.Key != EnumKey.None)
                 {
-                    PressKey(Keys.D, false);
-                    await Task.Delay(100);
-                    PressKey(Keys.D, true);
 
                     if (PlayPP)
                     {
                         await Task.Run(() =>
                         {
-                            mPressKey.KeyPress(obj.Key.ToString()[0], 0);
+                            mPressKey.KeyPress(obj.Key, 0);
                         });
                     }
                     else
                     {
-                       
-                            mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond);
-                       
+
+                        mPressKey.KeyPress(obj.Key, obj.Millisecond);
+
                     }
-                  
-              
+
+
                 }
-                
+
             }
             catch (Exception exception)
             {
 
-                 
+
             }
         }
 
@@ -280,7 +272,7 @@ namespace MidiToKeyboard.Application
                 return;
             }
             isStart = false;
-            
+
             midiPlayer.Stop();
         }
 
@@ -293,7 +285,7 @@ namespace MidiToKeyboard.Application
         {
             try
             {
-           
+
 
                 var listbox = e.Source as System.Windows.Controls.ListBox;
                 currentSongView = listbox.SelectedItem as SongView;
@@ -324,7 +316,7 @@ namespace MidiToKeyboard.Application
                     var songView = new SongView(file);
                     MainWindowViewModel.SongList.Add(songView);
                 }
-              
+
             }
         }
         ClientCore SocketClient { get; set; }
@@ -337,9 +329,9 @@ namespace MidiToKeyboard.Application
             }
             if (!string.IsNullOrWhiteSpace(Ip.Text))
             {
-                SocketClient = new ClientCore(Ip.Text,8887);
+                SocketClient = new ClientCore(Ip.Text, 8887);
                 SocketClient.Connect();
-                SocketClient.OnReceive= (str) =>
+                SocketClient.OnReceive = (str) =>
                 {
 
                     Dispatcher.Invoke(new Action(() =>
@@ -360,11 +352,11 @@ namespace MidiToKeyboard.Application
 
         private void createConnectBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(SocketService is object)
+            if (SocketService is object)
             {
                 SocketService.Multicast("服务器发送测试1");
             }
-            SocketService = new ServerCore(IPAddress.Any,8887);
+            SocketService = new ServerCore(IPAddress.Any, 8887);
             SocketService.Start();
             try
             {
