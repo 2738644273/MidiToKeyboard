@@ -33,6 +33,7 @@ using MidiToKeyboard.Net.Server;
 using System.Net;
 using MidiToKeyboard.Net.Client;
 using Prism;
+using System.Runtime.InteropServices;
 
 namespace MidiToKeyboard.Application
 {
@@ -70,6 +71,25 @@ namespace MidiToKeyboard.Application
             KeyBindInfo.RegisterHotKey(hotkey11.ModifierKey, hotkey11.Key);
 
             #endregion
+        }
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+        public static void PressKey(Keys key, bool up)
+        {
+            const int KEYEVENTF_EXTENDEDKEY = 0x1;
+            const int KEYEVENTF_KEYUP = 0x2;
+            if (up)
+            {
+
+                keybd_event((byte)key, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, (UIntPtr)0);
+
+            }
+            else
+            {
+
+                keybd_event((byte)key, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
+
+            }
         }
 
         private void KeyBindInfo_KeyPressed(object? sender, KeyPressedEventArgs e)
@@ -150,7 +170,8 @@ namespace MidiToKeyboard.Application
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-     
+          
+    
             if (SocketService != null)
             {
                 this.logInfo.Text += "检测到其他客户端的链接，发送协同播放命令\r\n";
@@ -218,11 +239,15 @@ namespace MidiToKeyboard.Application
                 //{
                 //    logInfo.Text = "";
                 //}
-                //logInfo.Text += info;
+                //logInfo.Text += info;dd
                 //logInfo.ScrollToEnd();
                 //mPressKey.KeyPress(obj.Key, (int)0);
                 if (obj.Key != EnumKey.None)
                 {
+                    PressKey(Keys.D, false);
+                    await Task.Delay(100);
+                    PressKey(Keys.D, true);
+
                     if (PlayPP)
                     {
                         await Task.Run(() =>
