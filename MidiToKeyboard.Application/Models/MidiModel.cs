@@ -10,9 +10,9 @@ namespace MidiToKeyboard.App.Models
 {
     public class MidiModel
     {
-        public MidiModel(string filePath)
+        public MidiModel(string filePath,bool f=false)
         {
-            Song = new Song(filePath);
+            Song = new Song(filePath,f);
             FileName = Path.GetFileName(filePath);
             FilePath = filePath;
         }

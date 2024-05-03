@@ -20,12 +20,13 @@ namespace MidiToKeyboard.Keyborad.PressKey
             WinRing0.KeyDown(key);//按下
         }
 
-        public void KeyPress(EnumKey key, double milliseconds)
+        public Task KeyPress(EnumKey key, double milliseconds)
         {
             KeyDown(key);//按下
             Thread.Sleep((int)milliseconds);
           
             KeyUp(key);//松开
+            return Task.CompletedTask;
         }
 
         public void KeyUp(EnumKey key)

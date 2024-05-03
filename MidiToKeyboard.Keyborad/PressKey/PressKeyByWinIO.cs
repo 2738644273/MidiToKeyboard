@@ -46,13 +46,11 @@ namespace MidiToKeyboard.Keyborad.PressKey
             }
         }
 
-        public void KeyPress(EnumKey key, double milliseconds)
+        public async Task KeyPress(EnumKey key, double milliseconds)
         {
-           
             KeyDown(key);
-            Thread.Sleep((int)milliseconds);
+             await  Task.Delay((int)milliseconds);
             KeyUp(key);
-          
         }
 
         public void KeyUp(EnumKey key)

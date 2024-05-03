@@ -29,11 +29,12 @@ namespace TestKeyboard.PressKey
             SendInputHelper.SendInput(1, input, Marshal.SizeOf(default(SendInputHelper.INPUT)));
         }
 
-        public void KeyPress(EnumKey key, double milliseconds)
+        public Task KeyPress(EnumKey key, double milliseconds)
         {
             KeyDown(key);
             Thread.Sleep((int)milliseconds);
             KeyUp(key);
+            return Task.CompletedTask;
         }
 
         public void KeyUp(EnumKey key)

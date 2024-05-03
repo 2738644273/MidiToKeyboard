@@ -49,6 +49,7 @@ namespace MidiToKeyboard.Application
         private static HotkeyHook KeyBindInfo = null;
         private static bool isStart = false;
         public static bool PlayPP = false;
+        public static bool PlayMaster = false;
         private MainWindowViewModel MainWindowViewModel { get; }
         public MainWindow()
         {
@@ -151,18 +152,37 @@ namespace MidiToKeyboard.Application
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-           //var a =  SongConfig.UseDefaultConfig();
-           
-           // foreach (var items in a.KeyTable)
-           // {
-           //     foreach (var item in items)
-           //     {
-           //         await Task.Delay(300);
-           //         mPressKey.KeyPress(item, 10);
-           //     }
-           // }
             if (currentSongView is null)
             {
+                SongConfig a ;
+                if (PlayMaster)
+                {
+                 a =   SongConfig.UseDetailConfig();
+                }
+                else
+                {
+                    a = SongConfig.UseDefaultConfig();
+                }
+                
+            foreach (var items in a.KeyTable)
+            {
+                foreach (var item in items)
+               {
+                    await Task.Delay(50);
+                    mPressKey.KeyPress(item, 150);
+               }
+            }
+            a.KeyTable.Reverse();
+            foreach (var items in a.KeyTable)
+            {
+                 items.Reverse();
+                foreach (var item in items)
+                {
+                    await Task.Delay(50);
+                    mPressKey.KeyPress(item, 150);
+                }
+            }
+          
                 return;
 
             }
@@ -213,8 +233,15 @@ namespace MidiToKeyboard.Application
             var midi = new MidiPlayer(songView.Song, null);
             midi.PlaybackProgressTime = songView.MetricTimeSpan;
             midi.OnPlay += Midi_OnPlayKey;
+            slide.Minimum = 0;
+            slide.Maximum = songView.Song.MidiFile.GetDuration<MetricTimeSpan>().TotalSeconds;
+            slide.Value = songView.MetricTimeSpan.TotalSeconds;
             midi.Playback.EventPlayed += (object? sender, MidiEventPlayedEventArgs e) =>
             {
+                Dispatcher.Invoke(() =>
+                {
+                    slide.Value = songView.MetricTimeSpan.TotalSeconds;
+                });
                 songView.MetricTimeSpan = midi.PlaybackProgressTime;
             };
             midiPlayer = midi;
@@ -230,29 +257,22 @@ namespace MidiToKeyboard.Application
             {
                 string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteName}) 播放音符: {obj.NewNote}({obj.NewNote.NoteName}) 按下: {obj.Key},时间:{obj.Millisecond}";
                 Debug.WriteLine(info);
-                //if (logInfo.Text.Length>400)
-                //{
-                //    logInfo.Text = "";
-                //}
-                //logInfo.Text += info;dd
-                //logInfo.ScrollToEnd();
-                //mPressKey.KeyPress(obj.Key, (int)0);
+              
                 if (obj.Key != EnumKey.None)
                 {
 
                     if (PlayPP)
-                    {
-                        await Task.Run(() =>
-                        {
-                            mPressKey.KeyPress(obj.Key, 0);
-                        });
+                    {   
+                     
+                        await   mPressKey.KeyPress(obj.Key, 0);
+                        
                     }
                     else
-                    {
+                  {
 
-                        mPressKey.KeyPress(obj.Key, obj.Millisecond);
-
-                    }
+                       await mPressKey.KeyPress(obj.Key, obj.Millisecond);
+                      
+                }
 
 
                 }
@@ -313,7 +333,7 @@ namespace MidiToKeyboard.Application
                     {
                         continue;
                     }
-                    var songView = new SongView(file);
+                    var songView = new SongView(file, !PlayMaster);
                     MainWindowViewModel.SongList.Add(songView);
                 }
 
@@ -377,6 +397,36 @@ namespace MidiToKeyboard.Application
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             PlayPP = false;
+        }
+
+        private void CheckBox_Checked_1(object sender, RoutedEventArgs e)
+        {
+            PlayMaster = true;
+            var listbox = SongListBox;
+            var list =  listbox.ItemsSource.Cast<SongView>();
+            foreach (var item in list)
+            {
+                item.Song.Config.KeyTable = SongConfig.UseDetailConfig().KeyTable;
+            }
+        }
+
+        private void CheckBox_Unchecked_1(object sender, RoutedEventArgs e)
+        {
+            PlayMaster = false;
+            var listbox = SongListBox;
+            var list = listbox.ItemsSource.Cast<SongView>();
+            foreach (var item in list)
+            {
+                item.Song.Config.KeyTable = SongConfig.UseDefaultConfig().KeyTable;
+            }
+        }
+
+        private void slide_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (currentSongView is object)
+            {
+                currentSongView.MetricTimeSpan = new MetricTimeSpan(TimeSpan.FromSeconds(slide.Value));
+            }
         }
     }
 }
