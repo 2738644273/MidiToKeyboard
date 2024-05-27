@@ -40,15 +40,15 @@ namespace MidiToKeyboard.Midi.Entity
                 {
                   new ()
                   {
-                      EnumKey.Z,EnumKey.S,EnumKey.X,EnumKey.D,EnumKey.C,EnumKey.V,EnumKey.G,EnumKey.B,EnumKey.H,EnumKey.N,EnumKey.J,EnumKey.M
+                      EnumKey.VK_Z,EnumKey.VK_S,EnumKey.VK_X,EnumKey.VK_D,EnumKey.VK_C,EnumKey.VK_V,EnumKey.VK_G,EnumKey.VK_B,EnumKey.VK_H,EnumKey.VK_N,EnumKey.VK_J,EnumKey.VK_M
                   }  ,
                   new ()
                   {
-                      EnumKey.Oemcomma,EnumKey.L,EnumKey.OemPeriod,EnumKey.OemSemicolon,EnumKey.OemQuestion,EnumKey.Q,EnumKey.D2,EnumKey.W,EnumKey.D3,EnumKey.E,EnumKey.D4,EnumKey.R
+                      EnumKey.OEM_COMMA,EnumKey.VK_L,EnumKey.OEM_PERIOD,EnumKey.OEM_1,EnumKey.OEM_2,EnumKey.VK_Q,EnumKey.NUMPAD3,EnumKey.VK_W,EnumKey.NUMPAD3,EnumKey.VK_E,EnumKey.NUMPAD4,EnumKey.VK_R
                   },
                   new ()
                   {
-                      EnumKey.T,EnumKey.D6,EnumKey.Y,EnumKey.D7,EnumKey.U,EnumKey.I,EnumKey.D9,EnumKey.O,EnumKey.D0,EnumKey.P,EnumKey.OemMinus,EnumKey.OemCloseBrackets
+                      EnumKey.VK_T,EnumKey.NUMPAD6,EnumKey.VK_Y,EnumKey.NUMPAD7,EnumKey.VK_U,EnumKey.VK_I,EnumKey.NUMPAD9,EnumKey.VK_O,EnumKey.NUMPAD0,EnumKey.VK_P,EnumKey.OEM_MINUS,EnumKey.OEM_6
                   }
                 },
                //Keytable = "z?x?cv?b?n?m" + "a?s?df?g?h?j" + "q?w?er?t?y?u",

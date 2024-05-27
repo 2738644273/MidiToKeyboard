@@ -43,7 +43,7 @@ namespace MidiToKeyboard.Application
     public partial class MainWindow : FluentWindow
     {
         private static MidiPlayer midiPlayer = null;
-        private static IPressKey mPressKey = new PressKeyByWinRing0();
+        private static IPressKey mPressKey = new PressKeyBySendInput();
         private  static OutputDevice OutputDevice = null;
         private static SongView currentSongView = null;
         private static HotkeyHook KeyBindInfo = null;
@@ -252,13 +252,13 @@ namespace MidiToKeyboard.Application
                     {
                         await Task.Run(() =>
                         {
-                            mPressKey.KeyPress(obj.Key.ToString()[0], 0);
+                            mPressKey.KeyPress(obj.Key, 0);
                         });
                     }
                     else
                     {
                        
-                            mPressKey.KeyPress(obj.Key.ToString()[0], obj.Millisecond);
+                       mPressKey.KeyPress(obj.Key, obj.Millisecond);
                        
                     }
                   

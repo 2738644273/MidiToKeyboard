@@ -7,6 +7,8 @@ using System.Text;
 
 using MidiToKeyboard.Keyborad.DriverStageHelper;
 using MidiToKeyboard.Keyborad.PressKey;
+using MidiToKeyBoard.Core.Constant;
+using WindowsInput;
 
 namespace TestKeyboard.PressKey
 {
@@ -16,34 +18,22 @@ namespace TestKeyboard.PressKey
         {
             return true;
         }
-
-        public void KeyDown(char key)
+        InputSimulator iputSimulator = new InputSimulator();
+        public void KeyDown(EnumKey key)
         {
-            SendInputHelper.INPUT[] input = new SendInputHelper.INPUT[1];
-            input[0].type = 1;
-            short num = SendInputHelper.VkKeyScan(key);
-            input[0].ki.wVk = num;
-            input[0].ki.dwFlags = 0;
-
-            SendInputHelper.SendInput(1, input, Marshal.SizeOf(default(SendInputHelper.INPUT)));
+            iputSimulator.Keyboard.KeyDown((VirtualKeyCode)key);
         }
 
-        public void KeyPress(char key, double milliseconds)
+        public void KeyPress(EnumKey key, double milliseconds)
         {
-            KeyDown(key);
+            iputSimulator.Keyboard.KeyDown((VirtualKeyCode)key);
             Thread.Sleep((int)milliseconds);
-            KeyUp(key);
+            iputSimulator.Keyboard.KeyUp((VirtualKeyCode)key);
         }
 
-        public void KeyUp(char key)
+        public void KeyUp(EnumKey key)
         {
-            SendInputHelper.INPUT[] input = new SendInputHelper.INPUT[1];
-            input[0].type = 1;
-            short num = SendInputHelper.VkKeyScan(key);
-            input[0].ki.wVk = num;
-            input[0].ki.dwFlags = 2;
-
-            SendInputHelper.SendInput(1, input, Marshal.SizeOf(default(SendInputHelper.INPUT)));
+            iputSimulator.Keyboard.KeyUp((VirtualKeyCode)key);
         }
     }
 }

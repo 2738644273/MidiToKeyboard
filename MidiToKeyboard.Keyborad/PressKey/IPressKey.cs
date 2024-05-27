@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MidiToKeyBoard.Core.Constant;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,10 @@ namespace MidiToKeyboard.Keyborad.PressKey
     {
         bool Initialize(EnumWindowsType winType);
 
-        void KeyPress(char key,double milliseconds);
+        void KeyPress(EnumKey key,double milliseconds);
 
-        void KeyDown(char key);
+        void KeyDown(EnumKey key);
 
-        void KeyUp(char key);
+        void KeyUp(EnumKey key);
     }
 }

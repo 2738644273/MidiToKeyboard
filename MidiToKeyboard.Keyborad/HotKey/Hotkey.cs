@@ -18,7 +18,7 @@ public sealed class Hotkey
         get => key;
         set
         {
-            if (value != EnumKey.ControlKey && value != EnumKey.Alt && value != EnumKey.Menu && value != EnumKey.ShiftKey)
+            if (value != EnumKey.CONTROL && value != EnumKey.MENU && value != EnumKey.SHIFT)
             {
                 key = value;
             }
