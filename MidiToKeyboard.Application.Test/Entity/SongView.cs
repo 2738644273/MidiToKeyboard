@@ -11,9 +11,9 @@ namespace MidiToKeyboard.Application.Entity
 {
     public class SongView
     {
-        public SongView(string filePath)
+        public SongView(string filePath,bool f)
         {
-            Song = new Song(filePath);
+            Song = new Song(filePath, f);
             FileName = Path.GetFileName(filePath);
             FilePath = filePath;
         }

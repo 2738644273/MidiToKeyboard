@@ -74,6 +74,25 @@ namespace MidiToKeyboard.Midi.MidiSong
         {
             return MidiFile.GetPlayback();
         }
+        public Song(string midiPath,bool f)
+        {
+            if (f)
+            {
+                Config = SongConfig.UseDefaultConfig();
+            }
+            else
+            {
+                Config = SongConfig.UseDetailConfig();
+            }
+            MidiFile = MidiFile.Read(midiPath);
+            TempoMap = MidiFile.GetTempoMap();
+            TimedEvents = MidiFile.GetTimedEvents().ToList();
+            TrackChunks = MidiFile.GetTrackChunks().ToList();
+            //获取最佳偏移值
+            Shifting = ComputeBestShift();
+            //设置默认通道
+            PlayingChannels = AllChannels;
+        }
         public Song(string midiPath)
         {
             Config = SongConfig.UseDefaultConfig();
