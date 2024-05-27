@@ -44,7 +44,7 @@ namespace MidiToKeyboard.Application
     {
         private static MidiPlayer midiPlayer = null;
         private static IPressKey mPressKey = new PressKeyBySendInput();
-        private  static OutputDevice OutputDevice = null;
+        private static OutputDevice OutputDevice = null;
         private static SongView currentSongView = null;
         private static HotkeyHook KeyBindInfo = null;
         private static bool isStart = false;
@@ -154,35 +154,35 @@ namespace MidiToKeyboard.Application
         {
             if (currentSongView is null)
             {
-                SongConfig a ;
+                SongConfig a;
                 if (PlayMaster)
                 {
-                 a =   SongConfig.UseDetailConfig();
+                    a = SongConfig.UseDetailConfig();
                 }
                 else
                 {
                     a = SongConfig.UseDefaultConfig();
                 }
-                
-            foreach (var items in a.KeyTable)
-            {
-                foreach (var item in items)
-               {
-                    await Task.Delay(50);
-                    mPressKey.KeyPress(item, 150);
-               }
-            }
-            a.KeyTable.Reverse();
-            foreach (var items in a.KeyTable)
-            {
-                 items.Reverse();
-                foreach (var item in items)
+
+                foreach (var items in a.KeyTable)
                 {
-                    await Task.Delay(50);
-                    mPressKey.KeyPress(item, 150);
+                    foreach (var item in items)
+                    {
+
+                        await mPressKey.KeyPress(item, 150);
+                    }
                 }
-            }
-          
+                a.KeyTable.Reverse();
+                foreach (var items in a.KeyTable)
+                {
+                    items.Reverse();
+                    foreach (var item in items)
+                    {
+
+                        await mPressKey.KeyPress(item, 150);
+                    }
+                }
+
                 return;
 
             }
@@ -257,7 +257,7 @@ namespace MidiToKeyboard.Application
             {
                 string info = $"\n\r原始: {obj.OldNote}({obj.OldNote.NoteName}) 播放音符: {obj.NewNote}({obj.NewNote.NoteName}) 按下: {obj.Key},时间:{obj.Millisecond}";
                 Debug.WriteLine(info);
-              
+
                 if (obj.Key != EnumKey.None)
                 {
 
@@ -270,12 +270,12 @@ namespace MidiToKeyboard.Application
                     }
                     else
                     {
-                       
-                       mPressKey.KeyPress(obj.Key, obj.Millisecond);
-                       
+
+                        mPressKey.KeyPress(obj.Key, obj.Millisecond);
+
                     }
-                  
-              
+
+
                 }
 
             }
@@ -404,7 +404,7 @@ namespace MidiToKeyboard.Application
         {
             PlayMaster = true;
             var listbox = SongListBox;
-            var list =  listbox.ItemsSource.Cast<SongView>();
+            var list = listbox.ItemsSource.Cast<SongView>();
             foreach (var item in list)
             {
                 item.Song.Config.KeyTable = SongConfig.UseDetailConfig().KeyTable;

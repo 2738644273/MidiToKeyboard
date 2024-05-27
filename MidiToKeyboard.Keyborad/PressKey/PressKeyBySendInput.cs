@@ -24,10 +24,10 @@ namespace TestKeyboard.PressKey
             iputSimulator.Keyboard.KeyDown((VirtualKeyCode)key);
         }
 
-        public void KeyPress(EnumKey key, double milliseconds)
+        public async Task KeyPress(EnumKey key, double milliseconds)
         {
             iputSimulator.Keyboard.KeyDown((VirtualKeyCode)key);
-            Thread.Sleep((int)milliseconds);
+            await Task.Delay((int)milliseconds);
             iputSimulator.Keyboard.KeyUp((VirtualKeyCode)key);
         }
 

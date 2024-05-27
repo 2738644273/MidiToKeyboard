@@ -41,15 +41,15 @@ namespace MidiToKeyboard.Midi.Entity
                 {
                   new ()
                   {
-                      EnumKey.Z,EnumKey.None,EnumKey.X,EnumKey.None,EnumKey.C,EnumKey.V,EnumKey.None,EnumKey.B,EnumKey.None,EnumKey.N,EnumKey.None,EnumKey.M
+                      EnumKey.VK_Z,EnumKey.None,EnumKey.VK_X,EnumKey.None,EnumKey.VK_C,EnumKey.VK_V,EnumKey.None,EnumKey.VK_B,EnumKey.None,EnumKey.VK_N,EnumKey.None,EnumKey.VK_M
                   }  ,
                   new ()
                   {
-                      EnumKey.A,EnumKey.None,EnumKey.S,EnumKey.None,EnumKey.D,EnumKey.F,EnumKey.None,EnumKey.G,EnumKey.None,EnumKey.H,EnumKey.None,EnumKey.J
+                      EnumKey.VK_A,EnumKey.None,EnumKey.VK_S,EnumKey.None,EnumKey.VK_D,EnumKey.VK_F,EnumKey.None,EnumKey.VK_G,EnumKey.None,EnumKey.VK_H,EnumKey.None,EnumKey.VK_J
                   },
                   new ()
                   {
-                      EnumKey.Q,EnumKey.None,EnumKey.W,EnumKey.None,EnumKey.E,EnumKey.R,EnumKey.None,EnumKey.T,EnumKey.None,EnumKey.Y,EnumKey.None,EnumKey.U
+                      EnumKey.VK_Q,EnumKey.None,EnumKey.VK_W,EnumKey.None,EnumKey.VK_E,EnumKey.VK_R,EnumKey.None,EnumKey.VK_T,EnumKey.None,EnumKey.VK_Y,EnumKey.None,EnumKey.VK_U
                   }
                 },
                 //Keytable = "z?x?cv?b?n?m" + "a?s?df?g?h?j" + "q?w?er?t?y?u",
@@ -72,11 +72,11 @@ namespace MidiToKeyboard.Midi.Entity
                   }  ,
                   new ()
                   {
-                      EnumKey.OEM_COMMA,EnumKey.VK_L,EnumKey.OEM_PERIOD,EnumKey.OEM_1,EnumKey.OEM_2,EnumKey.VK_Q,EnumKey.NUMPAD3,EnumKey.VK_W,EnumKey.NUMPAD3,EnumKey.VK_E,EnumKey.NUMPAD4,EnumKey.VK_R
+                      EnumKey.OEM_COMMA,EnumKey.VK_L,EnumKey.OEM_PERIOD,EnumKey.OEM_1,EnumKey.OEM_2,EnumKey.VK_Q,EnumKey.VK_2,EnumKey.VK_W,EnumKey.VK_3,EnumKey.VK_E,EnumKey.VK_4,EnumKey.VK_R
                   },
                   new ()
                   {
-                      EnumKey.VK_T,EnumKey.NUMPAD6,EnumKey.VK_Y,EnumKey.NUMPAD7,EnumKey.VK_U,EnumKey.VK_I,EnumKey.NUMPAD9,EnumKey.VK_O,EnumKey.NUMPAD0,EnumKey.VK_P,EnumKey.OEM_MINUS,EnumKey.OEM_6
+                      EnumKey.VK_T,EnumKey.VK_6,EnumKey.VK_Y,EnumKey.VK_7,EnumKey.VK_U,EnumKey.VK_I,EnumKey.VK_9,EnumKey.VK_O,EnumKey.VK_0,EnumKey.VK_P,EnumKey.OEM_MINUS,EnumKey.OEM_4
                   }
                 },
                //Keytable = "z?x?cv?b?n?m" + "a?s?df?g?h?j" + "q?w?er?t?y?u",
