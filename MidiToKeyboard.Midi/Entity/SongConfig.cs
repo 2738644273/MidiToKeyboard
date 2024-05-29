@@ -58,6 +58,32 @@ namespace MidiToKeyboard.Midi.Entity
                 B5Pitch = 83,
             };
         }
+        public static SongConfig UseDFConfig()
+        {
+            return new SongConfig()
+            {
+                //半音没有对应的按键。使用None不做任何处理
+                KeyTable = new()
+                {
+                  new ()
+                  {
+                      EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F
+                  }  ,
+                  new ()
+                  {
+                      EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F,EnumKey.VK_F
+                  },
+                  new ()
+                  {
+                      EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D,EnumKey.VK_D
+                  }
+                },
+                //Keytable = "z?x?cv?b?n?m" + "a?s?df?g?h?j" + "q?w?er?t?y?u",
+                C3Pitch = 48,
+                C5Pitch = 72,
+                B5Pitch = 83,
+            };
+        }
 
         public static SongConfig UseDetailConfig()
         {

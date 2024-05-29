@@ -78,7 +78,7 @@ namespace MidiToKeyboard.Midi.MidiSong
         {
             if (f)
             {
-                Config = SongConfig.UseDefaultConfig();
+                Config = SongConfig.UseDFConfig();
             }
             else
             {

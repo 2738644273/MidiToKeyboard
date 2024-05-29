@@ -271,7 +271,7 @@ namespace MidiToKeyboard.Application
                     else
                     {
 
-                        mPressKey.KeyPress(obj.Key, obj.Millisecond);
+                      await  mPressKey.KeyPress(obj.Key, obj.Millisecond);
 
                     }
 
